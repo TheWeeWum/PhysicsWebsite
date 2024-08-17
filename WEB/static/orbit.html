@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Programs</title>
+    <link rel="stylesheet" href="CSS/index.css">
+    <link rel="stylesheet" href="CSS/inputs.css">
+    <script src="JS/orbit.js"></script>
+</head>
+
+<body>
+    <h1>Gravitational/Electric Field Simulation</h1>
+    <div class="container"><div class="text">
+        <p>
+            ... to be added ...
+        </p>
+    </div></div>
+
+    <ul class="program-list">
+        <li><img src="Images/orbit.gif" alt="Orbital Mechanics" width="250" id="orbitImage"></li>
+    </ul>
+
+    <form id="orbitArgs" action="/submit" method="POST">
+        <button type="submit">Run Program</button>
+        <div class="input-group-size">
+            <label for="size">X:</label>
+            <input type="number" value="500" name="x" id="x" required>
+        </div>
+        <div class="input-group-size">
+            <label for="size">Y:</label>
+            <input type="number" value="500" name="y" id="y" required>
+        </div>
+        <div class="input-group-size">
+            <label for="size">Physics Frames Per Graphic Frame:</label>
+            <input type="number" value="10" name="physicsPerGraphic" id="physicsPerGraphic" required>
+        </div>
+        <div class="input-group-size">
+            <label for="size">Frames:</label>
+            <input type="number" value="500" name="frames" id="frames" required>
+        </div>
+        <div class="input-group-size">
+            <label for="size">Time Step (dt)</label>
+            <input type="number" value="0.001" step="0.00000001" name="dt" id="dt" required>
+        </div>
+        <div class="input-group-size">
+            <label for="size">Universal Constant</label>
+            <input type="number" value="1" step="0.00000001" name="universalConstant" id="universalConstant" required>
+        </div>
+
+        <div class="input-group-numthing">
+            <label for="size">Number of Masses:</label>
+            <input type="number" value="0" name="numMasses" id="numMasses">
+        </div>
+      
+        <div class="additionalInputs" id="additionalMasses"></div>
+    </form>
+
+    <div class="space"></div>
+
+</body>
+
+</html>

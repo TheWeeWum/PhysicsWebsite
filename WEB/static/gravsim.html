@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Programs</title>
+    <link rel="stylesheet" href="CSS/index.css">
+    <link rel="stylesheet" href="CSS/inputs.css">
+    <script src="JS/gravsim.js"></script>
+</head>
+
+<body>
+    <h1>Gravitational/Electric Field Simulation</h1>
+    <div class="container"><div class="text">
+        <p>
+            This program generates a png image representing a field strength simulation based on the objects you place in the field.
+            It will generate a gradient of light based on the strength of the field at each pixel, and show you the field lines should you choose to add them.
+            You can also set the mass/charge to a negative number. In the png positive fields correspond to a purple display and negative fields are represented by yellow color. 
+        </p>
+    </div></div>
+
+    <ul class="program-list">
+        <li><img src="Images/gravsim.png" alt="Astrophysics" width="250" id="gravsimImage"></li>
+    </ul>
+
+    <form id="gravsimArgs" action="/submit" method="POST">
+        <button type="submit">Run Program</button>
+        <div class="input-group-size">
+            <label for="size">X:</label>
+            <input type="number" name="x" id="x" required>
+        </div>
+        <div class="input-group-size">
+            <label for="size">Y:</label>
+            <input type="number" name="y" id="y" required>
+        </div>
+        <div class="input-group-size">
+            <label for="size">Color on/off (1/0):</label>
+            <input type="number" name="color" id="color" required>
+        </div>
+        <div class="input-group-numthing">
+            <label for="size">Number of Lines to draw per Mass:</label>
+            <input type="number" name="lines" id="lines" required>
+        </div>
+
+        <div class="input-group-numthing">
+            <label for="numMass">Number of Masses to draw:</label>
+            <input type="number" name="numMass" id="numMass">
+        </div>
+      
+        <div class="additionalInputs" id="additionalInputs"></div>
+    </form>
+
+    <div class="space"></div>
+
+</body>
+
+</html>

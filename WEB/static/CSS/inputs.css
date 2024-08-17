@@ -1,0 +1,165 @@
+.container {
+    padding: 20px;
+}
+
+.text {
+    margin: 0 auto;
+    width: calc(100%/2);
+    padding-inline: 20px;
+    padding-block: 5px;
+
+    background-color: black;
+    border-radius: 10px;
+    box-shadow: 0 0 16px rgba(255, 255, 255, 0.5);
+}
+
+.text-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 15px;
+    z-index: -1;
+    opacity: 0.6; /* Adjust shadow opacity */
+}
+
+p {
+    text-align: center;
+    max-width: 100%;
+}
+
+/* ------------------------------- FORM SECTION --------------------------------------- */
+form#gravsimArgs {
+    max-width: calc(100%/3); /* Adjust as needed */
+    margin: 0 auto; /* Centers the form */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+form#bounceArgs {
+    max-width: calc(100%/3); /* Adjust as needed */
+    margin: 0 auto; /* Centers the form */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+form#orbitArgs {
+    max-width: calc(100%/3); /* Adjust as needed */
+    margin: 0 auto; /* Centers the form */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.additionalInputs {
+    max-width: 600px; /* Adjust as needed */
+    margin: 0 auto; /* Centers the form */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.input-group {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+/* Adjust individual input group widths */
+.input-group-size {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    width: calc(50% - 10px); /* Adjust width for X */
+}
+
+.input-group-numthing {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    width: calc(100% - 10px); /* Adjust width for Z */
+}
+
+.input-group-additional {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    width: calc(50% - 10px); /* Full width for additional inputs */
+    /* Indentation for additional inputs */
+    /* margin-left: 30%; */
+}
+
+.additional {
+    margin-top: 8px;
+}
+
+/* ------------------------------- INPUT SECTION --------------------------------------- */
+/* Basic input field styling */
+input[type="number"] {
+    padding: 8px;
+    border: none;
+    border-radius: 5px;
+    background-color: black;
+    color: white;
+    width: 100%;
+    box-sizing: border-box; /* Ensures padding is included in width */
+    font-size: 16px;
+    transition-duration: 0.4s;
+}
+  
+/* Placeholder color */
+input[type="number"]::placeholder {
+color: #ccc; /* Light gray placeholder text */
+}
+
+/* Focus style */
+input[type="number"]:focus {
+outline: none;
+background-color: #333;
+}
+
+/* Disable style */
+input[type="number"]:disabled {
+background-color: #aaa;
+color: #666;
+cursor: not-allowed;
+}
+  
+
+/* ------------------------------- BUTTON SECTION --------------------------------------- */
+/* Basic button styling */
+button {
+    width: 100%;
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    transition-duration: 0.4s;
+  }
+  
+  /* Hover effect */
+  button:hover {
+    background-color: #555;
+    color: white;
+  }
+  
+  /* Active/focus effect */
+  button:focus {
+    outline: none;
+    background-color: #333;
+  }
+  
+  /* Disabled button */
+  button:disabled {
+    background-color: #aaa;
+    color: #666;
+    cursor: not-allowed;
+  }
+  
