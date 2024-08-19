@@ -5,11 +5,11 @@ So far there are 4 different working simulations
 Fluids Simulation<br>
 ![Fluids GIF](https://github.com/TheWeeWum/PhysicsWebsite/blob/main/WEB/static/Images/fluid.gif)
 
-Springs/Damper Simulation
+Springs/Damper Simulation<br>
 ![Fluids GIF](https://github.com/TheWeeWum/PhysicsWebsite/blob/main/WEB/static/Images/bounce.gif)
 
-Orbital Simulation
+Orbital Simulation<br>
 ![Fluids GIF](https://github.com/TheWeeWum/PhysicsWebsite/blob/main/WEB/static/Images/orbit.gif)
 
-Gravitation/Electic Fields Simulation
+Gravitation/Electic Fields Simulation<br>
 ![Fluids GIF](https://github.com/TheWeeWum/PhysicsWebsite/blob/main/WEB/static/Images/gravsim.gif)
