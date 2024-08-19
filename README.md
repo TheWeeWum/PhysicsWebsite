@@ -2,8 +2,11 @@ This locally run website is designed to allow you to test various physics simula
 
 So far there are 4 different working simulations
 
-Fluids Simulation                                         Springs/Damper Simulation<br>
-<img src="https://github.com/TheWeeWum/PhysicsWebsite/blob/main/WEB/static/Images/fluid.gif" alt="Fluids GIF" width="400"/>  <img src="https://github.com/TheWeeWum/PhysicsWebsite/blob/main/WEB/static/Images/bounce.gif" alt="Bouncing GIF" width="400"/>
+Fluids Simulation<br>
+<img src="https://github.com/TheWeeWum/PhysicsWebsite/blob/main/WEB/static/Images/fluid.gif" alt="Fluids GIF" width="400"/>
+
+Springs/Damper Simulation<br>
+<img src="https://github.com/TheWeeWum/PhysicsWebsite/blob/main/WEB/static/Images/bounce.gif" alt="Bouncing GIF" width="400"/>
 
 Orbital Simulation<br>
 <img src="https://github.com/TheWeeWum/PhysicsWebsite/blob/main/WEB/static/Images/orbit.gif" alt="Orbits GIF" width="400"/>
