@@ -21,12 +21,13 @@ import sys
 # effectRadius = float(data['universalConstant'])
 
 
-x = 200
-y = 200
-frames = 400
-dt = 0.04
+x = 8*16
+y = 8*16
+frames = 600
+dt = 0.0025
 physicsPerGraphic = 1
-effectRadius = 15
+# must make x/effect radius an int, same for y
+effectRadius = 12
 
 gravx = 0
 gravy = 0
@@ -36,25 +37,25 @@ call_args.extend([f"{x}", f"{y}", f"{frames}", f"{dt}", f"{physicsPerGraphic}", 
 
 # mass, x, y, vx, vy
 
-num_particles = 2000
+num_particles = 4500
 min_mass = 1
 max_mass = 1
-min_x = 10
-max_x = x - 10
-min_y = 10
-max_y = y - 10
+min_x = 5
+max_x = x - 5
+min_y = 5
+max_y = y - 5
 
-min_vx = -1
-max_vx = 1
-min_vy = -1
-max_vy = 1
+min_vx = 0
+max_vx = 0
+min_vy = 0
+max_vy = 0
 
 
-# min_x = x/2 - 4
-# max_x = x/2 + 4
+min_x = x/2 - 2
+max_x = x/2 + 2
 
-# min_y = y/2 - 4
-# max_y = y/2 + 4
+min_y = y/2 - 2
+max_y = y/2 + 2
 
 
 call_args.extend([f"{num_particles}", 
@@ -64,6 +65,7 @@ call_args.extend([f"{num_particles}",
                   f"{min_vx}", f"{max_vx}",
                   f"{min_vy}", f"{max_vy}"])
 
+print(call_args)
 time_before_program = time_ns()
 print(f"------ calling program ------")
 call(call_args)

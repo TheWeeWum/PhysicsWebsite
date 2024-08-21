@@ -1,0 +1,11 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "args": ["C://Users//liamc//VSCode//PhysicsWebsite//WEB//CPrograms//Fluid//fluid.exe", "100", "100", "400", "0.001", "2", "10", "0", "0", "1500", "1", "1", "48.0", "52.0", "30", "70", "-1", "1", "-1", "1"],
+    "configurations": [
+        
+
+    ]
+}

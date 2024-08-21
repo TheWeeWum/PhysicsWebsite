@@ -25,7 +25,7 @@ gravx = float(data['gravx'])  # 0
 gravy = float(data['gravy'])  # 9
 
 
-call_args = ["C://Users//liamc//VSCode//WEB//CPrograms//Bounce//bounce.exe"]
+call_args = ["C://Users//liamc//VSCode//PhysicsWebsite//WEB//CPrograms//Bounce//bounce.exe"]
 call_args.extend([f"{x}", f"{y}", f"{frames}", f"{dt}", f"{gravx}", f"{gravy}", f"{physicsPerGraphic}", f"{damping}"])
 
 points = []
@@ -111,7 +111,7 @@ time_after_program = time_ns()
 
 print(f"------ program took {time_after_program - time_before_program} ns")
 
-path = "C:\\Users\\liamc\\VSCode\\WEB\\static\\Images\\"
+path = "C:\\Users\\liamc\\VSCode\\PhysicsWebsite\\WEB\\static\\Images\\"
 filenames = [path + f"temp{i}.ppm" for i in range(frames)]
 with imageio.get_writer(f'{path}bounce.gif', mode='I', fps=50, loop=0) as writer:
     for filename in filenames:
