@@ -23,8 +23,8 @@ import sys
 
 x = 8*16
 y = 8*16
-frames = 600
-dt = 0.0025
+frames = 800
+dt = 0.001
 physicsPerGraphic = 1
 # must make x/effect radius an int, same for y
 effectRadius = 12

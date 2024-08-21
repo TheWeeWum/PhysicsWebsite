@@ -2,11 +2,6 @@
 
 const char *path = "C:/Users/liamc/VSCode/PhysicsWebsite/WEB/static/Images/temp";
 
-void findBox(int x, int y, float effectRadius, int *boxX, int *boxY) {
-    *boxX = (int)(x/((int)effectRadius));
-    *boxY = (int)(y/((int)effectRadius));
-}
-
 void addDensities(float **densities, Particle *particle, int x, int y, float effectRadius, float effectSquared) {
     float xdiff = fabsf(particle->x - x);
     float ydiff = fabsf(particle->y - y);
@@ -21,14 +16,13 @@ void addDensities(float **densities, Particle *particle, int x, int y, float eff
 
     // float dist = sqrt_fast(inner, sqrtLookupTable[(int)inner-1], sqrtLookupTable[(int)inner+1]);
     // float dist = sqrtLookupTable[(int)inner];
-    float dist = sqrtf(inner);
-
-    if (dist < 2.0f) {
-        dist = 2.0f;
+    if (inner < 4.0f) {
+        inner = 4.0f;
     }
 
     // densities[i][j] += particle->mass * (1/powf(dist/effectRadius, 2));
-    densities[x][y] += particle->mass * ((effectRadius/dist) - 1);
+    // densities[x][y] += particle->mass * ((effectRadius*Q_rsqrt(inner)) - 1);
+    densities[x][y] += particle->mass * ((effectRadius/sqrtf(inner)) - 1);
 }
 
 void runInteraction(Particle *particle, Particle *other, float *sqrtLookupTable, float effectRadius, float effectSquared, float dt, float pressureConstant) {
@@ -50,17 +44,12 @@ void runInteraction(Particle *particle, Particle *other, float *sqrtLookupTable,
     float inner = powf(distX, 2) + powf(distY, 2);
     // float inner = squareLookupTable[abs(((int)(distX)*10))] + squareLookupTable[abs(((int)(distY)*10))];
 
-    if (inner >= effectSquared || inner < 0) return;
+    if (inner >= effectSquared) return;
 
     // float dist = sqrt_fast(inner, sqrtLookupTable[(int)inner-1], sqrtLookupTable[(int)inner+1]);
-
-    float dist = sqrt(inner);
-
-    // printf("%f\n", inner);
-    // fflush(stdout);
     // float dist = sqrtLookupTable[(int)inner];
 
-    float temp = dt * pressureConstant * (other->mass/particle->mass) * ((effectRadius/dist) - 1)/2;
+    float temp = dt * pressureConstant * (other->mass/particle->mass) * ((effectRadius/sqrt(inner)) - 1)/2;
 
     particle->vx -= distX * temp;
     particle->vy -= distY * temp;
@@ -80,8 +69,7 @@ void generateSquareLookupTable(float *squareLookupTable, float maxDist) {
     }
 }
 
-void writeppm(uint8_t ***arr, int x, int y, int k) {
-    char *truePath = malloc(sizeof(char) * (strlen(path) + strlen(".ppm") + 5));
+void writeppm(char *truePath, uint8_t ***arr, int x, int y, int k) {
     memset(truePath, '\0', sizeof(char) * (strlen(path) + strlen(".ppm") + 5));
     strcat(truePath, path);
     sprintf(&truePath[strlen(path)], "%d", k);
@@ -97,13 +85,14 @@ void writeppm(uint8_t ***arr, int x, int y, int k) {
     fclose(f);
 }
 
-void runStep(float *sqrtLookupTable, Box ***boxes, int xboxes, int yboxes, uint8_t ***arr, float **densities, int x, int y, int numparticles, Particle **particles, float effectRadius, float effectSquared, int frames, float dt, int phyPerGra, float gravx, float gravy, int iter) {
+void runStep(clock_t *timers, char *truePath, float *sqrtLookupTable, Box ***boxes, int xboxes, int yboxes, uint8_t ***arr, float **densities, int x, int y, int numparticles, Particle **particles, float effectRadius, float effectSquared, int frames, float dt, int phyPerGra, float gravx, float gravy, int iter) {
     float pressureConstant = 1.0f;
     float boundry = 3.0f; // must be > 0
     int tempX, tempY;
     int bx, by, dx, dy, neighborX, neighborY;
 
     // run non graphics steps
+    clock_t beginSim = clock();
     for (int nonGraphic = 1; nonGraphic <= phyPerGra; nonGraphic++) {
         // calculate movement of particles
         for (bx = 0; bx < xboxes; bx++) {
@@ -157,7 +146,8 @@ void runStep(float *sqrtLookupTable, Box ***boxes, int xboxes, int yboxes, uint8
             particle->vy += gravy * dt;
 
             // move particle to new box
-            findBox((int)(particle->x), (int)(particle->y), effectRadius, &tempX, &tempY);
+            tempX = GETXBOX(particle->x, effectRadius);
+            tempY = GETYBOX(particle->y, effectRadius);
             if (tempX == particle->boxNumX && tempY == particle->boxNumY) continue;
 
             Box *oldBox = boxes[particle->boxNumX][particle->boxNumY];
@@ -182,15 +172,21 @@ void runStep(float *sqrtLookupTable, Box ***boxes, int xboxes, int yboxes, uint8
 
         }
     }
+    timers[0] += clock() - beginSim;
 
     // calculate densities
     float maxDensity = 0.0f;
     float totalDensity = 0.0f;
+    beginSim = clock();
+    for (int child = 0; child < 4; child++) {
+
+    }
     for (int i = 0; i < x; i++) {
         for (int j = 0; j < y; j++) {
             densities[i][j] = 0.0f;
 
-            findBox(i, j, effectRadius, &bx, &by);
+            bx = GETXBOX(i, effectRadius);
+            by = GETYBOX(j, effectRadius);
             // Check neighboring boxes
             for (dx = -1; dx <= 1; dx++) {
                 for (dy = -1; dy <= 1; dy++) {
@@ -210,6 +206,8 @@ void runStep(float *sqrtLookupTable, Box ***boxes, int xboxes, int yboxes, uint8
             if (densities[i][j] > maxDensity) maxDensity = densities[i][j];
         }
     }
+    
+    timers[1] += clock() - beginSim;
 
     float averageDensity = totalDensity / ((x-boundry)*(y-boundry));
 
@@ -217,6 +215,7 @@ void runStep(float *sqrtLookupTable, Box ***boxes, int xboxes, int yboxes, uint8
     // averageDensity *= 1.1f;
     
     // draw the particles
+    beginSim = clock();
     for (int i = boundry; i < x-boundry; i++) {
         for (int j = boundry; j < y-boundry; j++) {
             if (i < (int)boundry || j < (int)boundry || i > (x-(int)boundry) || j > (y-(int)boundry)) {
@@ -270,6 +269,7 @@ void runStep(float *sqrtLookupTable, Box ***boxes, int xboxes, int yboxes, uint8
             }
         }
     }
+    timers[2] += clock() - beginSim;
 
     // for (int p = 0; p < numparticles; p++) {
     //     tempX = (int)(particles[p]->x);
@@ -283,21 +283,22 @@ void runStep(float *sqrtLookupTable, Box ***boxes, int xboxes, int yboxes, uint8
     //     arr[tempX][tempY][1] = 255;
     //     arr[tempX][tempY][2] = 0;
     // }
-
-    writeppm(arr, x, y, iter);
+    beginSim = clock();
+    writeppm(truePath, arr, x, y, iter);
+    timers[3] += clock() - beginSim;
 }
 
-void runSimulation(float *sqrtLookupTable, Box ***boxes, int xboxes, int yboxes, uint8_t ***arr, float **densities, int x, int y, int numparticles, Particle **particles, float effectRadius, int frames, float dt, int phyPerGra, float gravx, float gravy) {
+void runSimulation(clock_t *timers, char *truePath, float *sqrtLookupTable, Box ***boxes, int xboxes, int yboxes, uint8_t ***arr, float **densities, int x, int y, int numparticles, Particle **particles, float effectRadius, int frames, float dt, int phyPerGra, float gravx, float gravy) {
     float effectSquared = effectRadius*effectRadius;
     
     clock_t beginTraj = clock();
-    runStep(sqrtLookupTable, boxes, xboxes, yboxes, arr, densities, x, y, numparticles, particles, effectRadius, effectSquared, frames, dt, phyPerGra, gravx, gravy, 0);
+    runStep(timers, truePath, sqrtLookupTable, boxes, xboxes, yboxes, arr, densities, x, y, numparticles, particles, effectRadius, effectSquared, frames, dt, phyPerGra, gravx, gravy, 0);
     clock_t endTraj = clock();
     printf("1 frame took: %f seconds\n", (double)(endTraj - beginTraj) / CLOCKS_PER_SEC);
     printf("program expected to take: %f seconds\n", (double)(endTraj - beginTraj) * frames / CLOCKS_PER_SEC);
     fflush(stdout);
     for (int i = 1; i < frames; i++) {
-        runStep(sqrtLookupTable, boxes, xboxes, yboxes, arr, densities, x, y, numparticles, particles, effectRadius, effectSquared, frames, dt, phyPerGra, gravx, gravy, i);
+        runStep(timers, truePath, sqrtLookupTable, boxes, xboxes, yboxes, arr, densities, x, y, numparticles, particles, effectRadius, effectSquared, frames, dt, phyPerGra, gravx, gravy, i);
     }
 }
 
@@ -373,7 +374,8 @@ int main(int argc, char** argv) {
         particles[i]->vx   = ((float)rand() / (float)RAND_MAX) * (maxVX - minVX) + minVX;
         particles[i]->vy   = ((float)rand() / (float)RAND_MAX) * (maxVY - minVY) + minVY;
 
-        findBox((int)(particles[i]->x), (int)(particles[i]->y), effectRadius, &tempX, &tempY);
+        tempX = GETXBOX(particles[i]->x, effectRadius);
+        tempY = GETYBOX(particles[i]->y, effectRadius);
         Box *box = boxes[tempX][tempY];
         box->particleIndecies[box->numParticles] = particles[i];
 
@@ -422,12 +424,22 @@ int main(int argc, char** argv) {
     // generateSquareLookupTable(squareLookupTable, maxDist);
 
 
-
+    char *truePath = malloc(sizeof(char) * (strlen(path) + strlen(".ppm") + 5));
+    clock_t *timers = malloc(sizeof(clock_t) * 4);
+    timers[0] = 0;
+    timers[1] = 0;
+    timers[2] = 0;
+    timers[3] = 0;
     printf("creating particles\n");
     clock_t beginSim = clock();
-    runSimulation(sqrtLookupTable, boxes, xboxes, yboxes, arr, densities, x, y, numParticle, particles, effectRadius, frames, dt, phyPerGra, gravx, gravy);
+    runSimulation(timers, truePath, sqrtLookupTable, boxes, xboxes, yboxes, arr, densities, x, y, numParticle, particles, effectRadius, frames, dt, phyPerGra, gravx, gravy);
     clock_t endSim = clock();
     printf("simulating %d particles at %d computational frames took: %f seconds\n", numParticle, frames * phyPerGra, (double)(endSim - beginSim) / CLOCKS_PER_SEC);
+
+    printf("Time to compute movement: %f\n", (double)(timers[0])/CLOCKS_PER_SEC);
+    printf("Time to compute densities: %f\n", (double)(timers[1])/CLOCKS_PER_SEC);
+    printf("Time to compute pixel values: %f\n", (double)(timers[2])/CLOCKS_PER_SEC);
+    printf("Time to write pixel values: %f\n", (double)(timers[3])/CLOCKS_PER_SEC);
 
     for (int i = 0; i < x; i++) {
         for (int j = 0; j < y; j++) {

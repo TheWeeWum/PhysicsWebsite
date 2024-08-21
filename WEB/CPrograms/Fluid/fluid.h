@@ -17,6 +17,9 @@
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 
+#define GETYBOX(x, effectRadius) ((int)((x)/((int)(effectRadius))))
+#define GETXBOX(x, effectRadius) ((int)((x)/((int)(effectRadius))))
+
 float sqrt_fast(float num, float bottom, float top) {
     int iteration = 0;
     float accuracy = 0.0001;
@@ -43,6 +46,18 @@ float sqrt_fast(float num, float bottom, float top) {
     }
     return (top + bottom)/2;
 }
+
+float Q_rsqrt(float number)
+{
+  union {
+    float    f;
+    uint32_t i;
+  } conv = { .f = number };
+  conv.i  = 0x5f3759df - (conv.i >> 1);
+  conv.f *= 1.5F - (number * 0.5F * conv.f * conv.f);
+  return conv.f;
+}
+
 struct particle {
     float mass;
     float x;
