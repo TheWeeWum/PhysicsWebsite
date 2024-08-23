@@ -3,6 +3,7 @@
 const char *path = "C:/Users/liamc/VSCode/PhysicsWebsite/WEB/static/Images/temp";
 
 void writeppm(uint8_t ***arr, int x, int y, int k) {
+    printf("HERE\n");
     char *truePath = malloc(sizeof(char) * (strlen(path) + strlen(".ppm") + 5));
     memset(truePath, '\0', sizeof(char) * (strlen(path) + strlen(".ppm") + 5));
     strcat(truePath, path);

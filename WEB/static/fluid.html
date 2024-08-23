@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Programs</title>
+    <link rel="stylesheet" href="CSS/index.css">
+    <link rel="stylesheet" href="CSS/inputs.css">
+    <script src="JS/fluid.js"></script>
+</head>
+
+<body>
+    <h1>Fluid Simulation</h1>
+    <div class="container"><div class="text">
+        <p>
+            ... to be added ...
+        </p>
+    </div></div>
+
+    <ul class="program-list">
+        <li><img src="Images/fluid.gif" alt="Orbital Mechanics" width="250" id="fluidImage"></li>
+    </ul>
+
+    <form id="fluidArgs" action="/submit" method="POST">
+        <button type="submit">Run Program</button>
+        <div class="input-group-size">
+            <label for="size">X:</label>
+            <input type="number" value="128" name="x" id="x" required>
+        </div>
+        <div class="input-group-size">
+            <label for="size">Y:</label>
+            <input type="number" value="128" name="y" id="y" required>
+        </div>
+        <div class="input-group-size">
+            <label for="size">Frames:</label>
+            <input type="number" value="300" name="frames" id="frames" required>
+        </div>
+        <div class="input-group-size">
+            <label for="size">Physics Frames Per Graphic Frame:</label>
+            <input type="number" value="1" name="physicsPerGraphic" id="physicsPerGraphic" required>
+        </div>
+        <div class="input-group-size">
+            <label for="size">Time Step (dt)</label>
+            <input type="number" value="0.005" step="0.00000001" name="dt" id="dt" required>
+        </div>
+        <div class="input-group-size">
+            <label for="size">Effect Radius</label>
+            <input type="number" value="8" name="effectRadius" id="effectRadius" required>
+        </div>
+
+        <div class="input-group-size">
+            <label for="size">Gravity: x</label>
+            <input type="number" value="0" name="gravx" id="gravx" required>
+        </div>
+        <div class="input-group-size">
+            <label for="size">Gravity: y</label>
+            <input type="number" value="0" name="gravy" id="gravy" required>
+        </div>
+
+        <div class="input-group-size">
+            <label for="size">Number of Particles</label>
+            <input type="number" value="2000" name="numParticles" id="numParticles" required>
+        </div>
+
+        <div class="input-group-size">
+            <label for="size">Minimum Mass</label>
+            <input type="number" value="1" name="minMass" id="minMass" required>
+        </div>
+        <div class="input-group-size">
+            <label for="size">Maximum Mass</label>
+            <input type="number" value="1" name="maxMass" id="maxMass" required>
+        </div>
+
+        <div class="input-group-size">
+            <label for="size">Minimum X</label>
+            <input type="number" value="20" name="minX" id="minX" required>
+        </div>
+        <div class="input-group-size">
+            <label for="size">Maximum X</label>
+            <input type="number" value="100" name="maxX" id="maxX" required>
+        </div>
+
+        <div class="input-group-size">
+            <label for="size">Minimum Y</label>
+            <input type="number" value="20" name="minY" id="minY" required>
+        </div>
+        <div class="input-group-size">
+            <label for="size">Maximum Y</label>
+            <input type="number" value="100" name="maxY" id="maxY" required>
+        </div>
+
+        <div class="input-group-size">
+            <label for="size">Minimum Velocity in X direction</label>
+            <input type="number" value="0" name="minVX" id="minVX" required>
+        </div>
+        <div class="input-group-size">
+            <label for="size">Maximum Velocity in X direction</label>
+            <input type="number" value="0" name="maxVX" id="maxVX" required>
+        </div>
+
+        <div class="input-group-size">
+            <label for="size">Minimum Velocity in Y direction</label>
+            <input type="number" value="0" name="minVY" id="minVY" required>
+        </div>
+        <div class="input-group-size">
+            <label for="size">Maximum Velocity in Y direction</label>
+            <input type="number" value="0" name="maxVY" id="maxVY" required>
+        </div>  
+    </form>
+
+    <div class="space"></div>
+
+</body>
+
+</html>

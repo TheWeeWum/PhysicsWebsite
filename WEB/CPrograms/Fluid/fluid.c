@@ -2,7 +2,7 @@
 
 const char *path = "C:/Users/liamc/VSCode/PhysicsWebsite/WEB/static/Images/temp";
 
-void addDensities(float **densities, Particle *particle, int x, int y, float effectRadius, float effectSquared) {
+void addDensities(float **densities, Particle *particle, float *sqrtLookupTable, int x, int y, float effectRadius, float effectSquared) {
     float xdiff = fabsf(particle->x - x);
     float ydiff = fabsf(particle->y - y);
 
@@ -22,6 +22,7 @@ void addDensities(float **densities, Particle *particle, int x, int y, float eff
 
     // densities[i][j] += particle->mass * (1/powf(dist/effectRadius, 2));
     // densities[x][y] += particle->mass * ((effectRadius*Q_rsqrt(inner)) - 1);
+    // densities[x][y] += particle->mass * ((effectRadius/sqrtLookupTable[MAX((int)(inner*100), 1)]) - 1);
     densities[x][y] += particle->mass * ((effectRadius/sqrtf(inner)) - 1);
 }
 
@@ -34,7 +35,7 @@ void runInteraction(Particle *particle, Particle *other, float *sqrtLookupTable,
     if (fabsf(distY) > effectRadius) return;
     
     // make sure they aren't too close
-    if (fabsf(distX) < 0.0001f && fabsf(distY) < 0.0001f) {
+    if ((fabsf(distX) < 0.0001f) && fabsf(distY) < 0.0001f) {
         if (distX < 0) distX = -0.0001f;
         else distX = 0.0001f;
         if (distY < 0) distY = -0.0001f;
@@ -49,7 +50,8 @@ void runInteraction(Particle *particle, Particle *other, float *sqrtLookupTable,
     // float dist = sqrt_fast(inner, sqrtLookupTable[(int)inner-1], sqrtLookupTable[(int)inner+1]);
     // float dist = sqrtLookupTable[(int)inner];
 
-    float temp = dt * pressureConstant * (other->mass/particle->mass) * ((effectRadius/sqrt(inner)) - 1)/2;
+    // float temp = dt * pressureConstant * (other->mass/particle->mass) * ((effectRadius/sqrtLookupTable[MAX((int)(inner*100), 1)]) - 1)/2;
+    float temp = dt * pressureConstant * (other->mass/particle->mass) * ((effectRadius/sqrtf(inner)) - 1)/2;
 
     particle->vx -= distX * temp;
     particle->vy -= distY * temp;
@@ -58,8 +60,8 @@ void runInteraction(Particle *particle, Particle *other, float *sqrtLookupTable,
 }
 
 void generateSqrtLookupTable(float *sqrtLookupTable, float maxDist) {
-    for (int dist = 0; dist <= maxDist; dist++) {
-        sqrtLookupTable[dist] = sqrtf(dist);
+    for (float dist = 0; dist <= maxDist*100; dist++) {
+        sqrtLookupTable[(int)dist] = sqrtf(dist/100);
     }
 }
 
@@ -198,7 +200,7 @@ void runStep(clock_t *timers, char *truePath, float *sqrtLookupTable, Box ***box
                     // loop through each particle in the box
                     for (int p = 0; p < box->numParticles; p++) {
                         Particle *particle = box->particleIndecies[p];
-                        addDensities(densities, particle, i, j, effectRadius, effectSquared);
+                        addDensities(densities, particle, sqrtLookupTable, i, j, effectRadius, effectSquared);
                     }
                 }
             }
@@ -313,15 +315,6 @@ int main(int argc, char** argv) {
     float gravx = strtof(argv[7], NULL);
     float gravy = strtof(argv[8], NULL);
 
-    // int x = 100;
-    // int y = 100;
-    // int frames = 100;
-    // float dt = 0.01f;
-    // int phyPerGra = 1;
-    // float effectRadius = 10.0f;
-    // float gravx = 0.0f;
-    // float gravy = 0.0f;
-
     int numParticle = strtol(argv[9], NULL, 10);
     float minMass = strtof(argv[10], NULL);
     float maxMass = strtof(argv[11], NULL);
@@ -334,6 +327,14 @@ int main(int argc, char** argv) {
     float minVY = strtof(argv[18], NULL);
     float maxVY = strtof(argv[19], NULL);
 
+    // int x = 100;
+    // int y = 100;
+    // int frames = 100;
+    // float dt = 0.01f;
+    // int phyPerGra = 1;
+    // float effectRadius = 10.0f;
+    // float gravx = 0.0f;
+    // float gravy = 0.0f;
     // int numParticle = 500;
     // float minMass = 1.0f;
     // float maxMass = 1.0f;
@@ -416,13 +417,11 @@ int main(int argc, char** argv) {
     }
 
     float maxDist = 2*powf(effectRadius, 2);
-    float *sqrtLookupTable = malloc(sizeof(float) * ((int)maxDist+1));
+    float *sqrtLookupTable = malloc(sizeof(float) * ((100*((int)maxDist))+1));
     generateSqrtLookupTable(sqrtLookupTable, maxDist);
-
-    // NOT FASTER
-    // float *squareLookupTable = malloc(sizeof(float) * (((int)maxDist)*10+1));
-    // generateSquareLookupTable(squareLookupTable, maxDist);
-
+    // for (int i = 0; i < (100*((int)maxDist))+1; i++) {
+    //     printf("%d: %f : %f\n", i, sqrtLookupTable[i], sqrtf((float)i/100));
+    // }
 
     char *truePath = malloc(sizeof(char) * (strlen(path) + strlen(".ppm") + 5));
     clock_t *timers = malloc(sizeof(clock_t) * 4);

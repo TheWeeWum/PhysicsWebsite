@@ -40,6 +40,14 @@ form#gravsimArgs {
     justify-content: space-between;
 }
 
+form#fluidArgs {
+    max-width: calc(100%/3); /* Adjust as needed */
+    margin: 0 auto; /* Centers the form */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
 form#bounceArgs {
     max-width: calc(100%/3); /* Adjust as needed */
     margin: 0 auto; /* Centers the form */

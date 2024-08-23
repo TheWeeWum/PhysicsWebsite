@@ -1,6 +1,6 @@
 #include "orbit.h"
 
-const char *path = "C:/Users/liamc/VSCode/WEB/static/Images/temp";
+const char *path = "C:/Users/liamc/VSCode/PhysicsWebsite/WEB/static/Images/temp";
 
 void writeppm(uint8_t ***arr, int x, int y, int k) {
     char *truePath = malloc(sizeof(char) * (strlen(path) + strlen(".ppm") + 5));

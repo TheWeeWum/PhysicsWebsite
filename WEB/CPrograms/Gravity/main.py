@@ -98,7 +98,7 @@ trajectories = []
 # ]
 
 
-call_args = ["C://Users//liamc//VSCode//WEB//CPrograms//Gravity//gravsim.exe"]
+call_args = ["C://Users//liamc//VSCode//PhysicsWebsite//WEB//CPrograms//Gravity//gravsim.exe"]
 call_args.extend([f"{x}", f"{y}", f"{linesPer}", f"{color}", f"{len(objects)}"])
 for obj in objects:
       call_args.extend([f"{obj[0]}", f"{obj[1]}", f"{obj[2]}"])

@@ -24,7 +24,6 @@ damping = float(data['damping'])  # 0.00001
 gravx = float(data['gravx'])  # 0
 gravy = float(data['gravy'])  # 9
 
-
 call_args = ["C://Users//liamc//VSCode//PhysicsWebsite//WEB//CPrograms//Bounce//bounce.exe"]
 call_args.extend([f"{x}", f"{y}", f"{frames}", f"{dt}", f"{gravx}", f"{gravy}", f"{physicsPerGraphic}", f"{damping}"])
 
@@ -43,6 +42,7 @@ springs = []
 #       -50, 30, offset=len(points))
 # points.extend(points2)
 # springs.extend(springs2)
+
 for i in range(0, int(data['numCircles'])):
       pointsTemp, springsTemp = cirleMaker(
             int(data[f'C_numPoints{i+1}']),
@@ -76,6 +76,7 @@ for i in range(0, int(data['numCircles'])):
 #     [20*sqrt(2), 4, 0, 3]
 #     [20*sqrt(2), 4, 1, 2]
 # ]
+
 for i in range(0, int(data['numPoints'])):
       points.append([
             int(data[f'P_mass{i+1}']),
@@ -93,7 +94,6 @@ for i in range(0, int(data['numSprings'])):
             int(data[f'P_index1{i+1}']),
             int(data[f'P_index2{i+1}']),
       ])
-
 
 call_args.append(f"{len(points)}")
 for p in points:

@@ -44,8 +44,9 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener("DOMContentLoaded", function() {
   var numMassesObj = document.getElementById("numMass");
 
-  numMasses.addEventListener("input", function() {
+  numMassesObj.addEventListener("input", function() {
     var numMasses = parseInt(numMassesObj.value);
+    console.log(numMasses);
 
     // Clear previous additional inputs
     var additionalInputsDiv = document.getElementById("additionalInputs");

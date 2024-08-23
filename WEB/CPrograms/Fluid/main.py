@@ -10,52 +10,67 @@ import imageio
 import json
 import sys
 
-# print(sys.argv)
-# data = json.loads(sys.argv[1])
+print(sys.argv)
+data = json.loads(sys.argv[1])
 
-# x = int(data['x'])
-# y = int(data['y'])
-# frames = int(data['frames'])  # 50*7
-# dt = float(data['dt'])  # 0.00005
-# physicsPerGraphic = int(data['physicsPerGraphic'])  # 600
-# effectRadius = float(data['universalConstant'])
+x = int(data['x'])
+y = int(data['y'])
+frames = int(data['frames'])  # 50*7
+physicsPerGraphic = int(data['physicsPerGraphic'])  # 600
+dt = float(data['dt'])  # 0.00005
+effectRadius = float(data['effectRadius'])
+gravx = float(data['gravx'])
+gravy = float(data['gravy'])
 
-
-x = 8*16
-y = 8*16
-frames = 800
-dt = 0.001
-physicsPerGraphic = 1
-# must make x/effect radius an int, same for y
-effectRadius = 12
-
-gravx = 0
-gravy = 0
+# x = 8*16
+# y = 8*16
+# frames = 400
+# dt = 0.005
+# physicsPerGraphic = 1
+# effectRadius = 12
+# gravx = 0
+# gravy = 0
 
 call_args = ["C://Users//liamc//VSCode//PhysicsWebsite//WEB//CPrograms//Fluid//fluid.exe"]
 call_args.extend([f"{x}", f"{y}", f"{frames}", f"{dt}", f"{physicsPerGraphic}", f"{effectRadius}", f"{gravx}", f"{gravy}"])
 
 # mass, x, y, vx, vy
 
-num_particles = 4500
-min_mass = 1
-max_mass = 1
-min_x = 5
-max_x = x - 5
-min_y = 5
-max_y = y - 5
+num_particles = int(data['numParticles'])
 
-min_vx = 0
-max_vx = 0
-min_vy = 0
-max_vy = 0
+min_mass = float(data['minMass'])
+max_mass = float(data['maxMass'])
+
+min_x = float(data['minX'])
+max_x = float(data['maxX'])
+min_y = float(data['minY'])
+max_y = float(data['maxY'])
+
+min_vx = float(data['minVX'])
+max_vx = float(data['maxVX'])
+
+min_vy = float(data['minVY'])
+max_vy = float(data['maxVY'])
+
+# num_particles = 4500
+# min_mass = 1
+# max_mass = 1
+# min_x = 5
+# max_x = x - 5
+# min_y = 5
+# max_y = y - 5
+
+# min_vx = 0
+# max_vx = 0
+# min_vy = 0
+# max_vy = 0
 
 
-min_x = x/2 - 2
-max_x = x/2 + 2
+# min_x = x/2 - 2
+# max_x = x/2 + 2
 
-min_y = y/2 - 2
-max_y = y/2 + 2
+# min_y = y/2 - 2
+# max_y = y/2 + 2
 
 
 call_args.extend([f"{num_particles}", 
