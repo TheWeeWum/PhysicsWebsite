@@ -1,5 +1,4 @@
 // Requiring module
-const http = require('http');
 const express = require('express');
 const multer = require('multer');
 const bodyParser = require('body-parser');
@@ -14,14 +13,19 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 // set up the statics folder
-app.use(express.static(path.join(__dirname, 'static')));
-app.use(express.static(path.join(__dirname, 'css')));
-app.use(express.static(path.join(__dirname, 'images')));
+app.use(express.static('static'));
+// app.use(express.static(path.join(__dirname, 'static')));
+// app.use(express.static(path.join(__dirname, 'css')));
+// app.use(express.static(path.join(__dirname, 'images')));
 
 
 // ----------------- Handling Basic GET requests ---------------------
 app.get(['/', '/index', '/index.html'],function(req,res){      
     res.sendFile(path.join(__dirname,'static/index.html'));
+});
+
+app.get('/CSS',function(req,res){      
+    res.sendFile(path.join(__dirname,'static/fluid.html'));
 });
 
 app.get('/fluid',function(req,res){      
@@ -44,7 +48,7 @@ app.get('/powder',function(req,res){
     res.sendFile(path.join(__dirname,'static/powder.html'));
 });
 
-// ----------------- Handling pythong GET requests -------------------
+// ----------------- Handling python POST requests -------------------
 app.post('/runFluid', upload.none(), (req, res) => {
     const formData = req.body;
     console.log('Form Data:', formData);

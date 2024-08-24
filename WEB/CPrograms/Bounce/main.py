@@ -24,7 +24,7 @@ damping = float(data['damping'])  # 0.00001
 gravx = float(data['gravx'])  # 0
 gravy = float(data['gravy'])  # 9
 
-call_args = ["C://Users//liamc//VSCode//PhysicsWebsite//WEB//CPrograms//Bounce//bounce.exe"]
+call_args = ["bounce.exe"]
 call_args.extend([f"{x}", f"{y}", f"{frames}", f"{dt}", f"{gravx}", f"{gravy}", f"{physicsPerGraphic}", f"{damping}"])
 
 points = []

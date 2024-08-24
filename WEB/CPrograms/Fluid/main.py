@@ -31,7 +31,9 @@ gravy = float(data['gravy'])
 # gravx = 0
 # gravy = 0
 
-call_args = ["C://Users//liamc//VSCode//PhysicsWebsite//WEB//CPrograms//Fluid//fluid.exe"]
+generalPath = "C:/Users/liamc/VSCode/PhysicsWebsite/WEB/"
+imagePath = generalPath + "static/Images/"
+call_args = [generalPath + "CPrograms/Fluid/fluid.exe", imagePath + 'temp']
 call_args.extend([f"{x}", f"{y}", f"{frames}", f"{dt}", f"{physicsPerGraphic}", f"{effectRadius}", f"{gravx}", f"{gravy}"])
 
 # mass, x, y, vx, vy
@@ -89,9 +91,8 @@ time_after_program = time_ns()
 
 print(f"------ program took {time_after_program - time_before_program} ns")
 
-path = "C:\\Users\\liamc\\VSCode\\PhysicsWebsite\\WEB\\static\\Images\\"
-filenames = [path + f"temp{i}.ppm" for i in range(frames)]
-with imageio.get_writer(f'{path}fluid.gif', mode='I', fps=50, loop=0) as writer:
+filenames = [imagePath + f"temp{i}.ppm" for i in range(frames)]
+with imageio.get_writer(f'{imagePath}fluid.gif', mode='I', fps=50, loop=0) as writer:
     for filename in filenames:
         image = imageio.imread(filename)
         writer.append_data(image)

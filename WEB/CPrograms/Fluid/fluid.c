@@ -306,26 +306,28 @@ void runSimulation(clock_t *timers, char *truePath, float *sqrtLookupTable, Box 
 
 int main(int argc, char** argv) {
     printf("start\n");
-    int x = strtol(argv[1], NULL, 10);
-    int y = strtol(argv[2], NULL, 10);
-    int frames = strtol(argv[3], NULL, 10);
-    float dt = strtof(argv[4], NULL);
-    int phyPerGra = strtol(argv[5], NULL, 10);
-    float effectRadius = strtof(argv[6], NULL);
-    float gravx = strtof(argv[7], NULL);
-    float gravy = strtof(argv[8], NULL);
+    const char *path = argv[1];
 
-    int numParticle = strtol(argv[9], NULL, 10);
-    float minMass = strtof(argv[10], NULL);
-    float maxMass = strtof(argv[11], NULL);
-    float minX = strtof(argv[12], NULL);
-    float maxX = strtof(argv[13], NULL);
-    float minY = strtof(argv[14], NULL);
-    float maxY = strtof(argv[15], NULL);
-    float minVX = strtof(argv[16], NULL);
+    int x = strtol(argv[2], NULL, 10);
+    int y = strtol(argv[3], NULL, 10);
+    int frames = strtol(argv[4], NULL, 10);
+    float dt = strtof(argv[5], NULL);
+    int phyPerGra = strtol(argv[6], NULL, 10);
+    float effectRadius = strtof(argv[7], NULL);
+    float gravx = strtof(argv[8], NULL);
+    float gravy = strtof(argv[9], NULL);
+
+    int numParticle = strtol(argv[10], NULL, 10);
+    float minMass = strtof(argv[11], NULL);
+    float maxMass = strtof(argv[12], NULL);
+    float minX = strtof(argv[13], NULL);
+    float maxX = strtof(argv[14], NULL);
+    float minY = strtof(argv[15], NULL);
+    float maxY = strtof(argv[16], NULL);
+    float minVX = strtof(argv[17], NULL);
     float maxVX = strtof(argv[17], NULL);
-    float minVY = strtof(argv[18], NULL);
-    float maxVY = strtof(argv[19], NULL);
+    float minVY = strtof(argv[19], NULL);
+    float maxVY = strtof(argv[20], NULL);
 
     // int x = 100;
     // int y = 100;
