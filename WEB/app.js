@@ -1,4 +1,5 @@
 // Requiring module
+const http = require('http');
 const express = require('express');
 const multer = require('multer');
 const bodyParser = require('body-parser');
@@ -17,6 +18,14 @@ app.use(express.static('static'));
 
 // ----------------- Handling Basic GET requests ---------------------
 app.get('/',function(req,res){      
+    res.sendFile(path.join(__dirname,'static/index.html'));
+});
+
+app.get('/index',function(req,res){      
+    res.sendFile(path.join(__dirname,'static/index.html'));
+});
+
+app.get('/index.html',function(req,res){      
     res.sendFile(path.join(__dirname,'static/index.html'));
 });
 
