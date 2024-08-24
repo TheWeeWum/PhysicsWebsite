@@ -1,5 +1,7 @@
 This locally run website is designed to allow you to test various physics simulations!
 
+You can use the program yourself at <a href='https://liamcsiffary.com/'>my website</a>
+
 So far there are 4 different working simulations
 
 Fluids Simulation<br>
