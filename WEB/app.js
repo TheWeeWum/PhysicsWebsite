@@ -14,18 +14,13 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 // set up the statics folder
-app.use(express.static('static'));
+app.use(express.static(path.join(__dirname, 'static')));
+app.use(express.static(path.join(__dirname, 'css')));
+app.use(express.static(path.join(__dirname, 'images')));
+
 
 // ----------------- Handling Basic GET requests ---------------------
-app.get('/',function(req,res){      
-    res.sendFile(path.join(__dirname,'static/index.html'));
-});
-
-app.get('/index',function(req,res){      
-    res.sendFile(path.join(__dirname,'static/index.html'));
-});
-
-app.get('/index.html',function(req,res){      
+app.get(['/', '/index', '/index.html'],function(req,res){      
     res.sendFile(path.join(__dirname,'static/index.html'));
 });
 
