@@ -107,14 +107,6 @@ app.post('/runGravsim', upload.none(), (req, res) => {
         }
     });
 
-    pyProg.stdout.on('data', (data) => {
-        console.log(`stdout: ${data}`);
-    });
-    
-    pyProg.stderr.on('data', (data) => {
-        console.error(`stderr: ${data}`);
-    });
-
     pyProg.unref();
 });
 
@@ -145,14 +137,6 @@ app.post('/runBounce', upload.none(), (req, res) => {
         }
     });
 
-    pyProg.stdout.on('data', (data) => {
-        console.log(`stdout: ${data}`);
-    });
-    
-    pyProg.stderr.on('data', (data) => {
-        console.error(`stderr: ${data}`);
-    });
-
     pyProg.unref();
 });
 
@@ -181,14 +165,6 @@ app.post('/runOrbit', upload.none(), (req, res) => {
         if (!res.headersSent) { // Check if the response has already been sent
             res.status(500).send('Failed to execute Python script.');
         }
-    });
-
-    pyProg.stdout.on('data', (data) => {
-        console.log(`stdout: ${data}`);
-    });
-    
-    pyProg.stderr.on('data', (data) => {
-        console.error(`stderr: ${data}`);
     });
 
     pyProg.unref();

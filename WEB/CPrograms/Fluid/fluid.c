@@ -1,7 +1,5 @@
 #include "fluid.h"
 
-const char *path = "C:/Users/liamc/VSCode/PhysicsWebsite/WEB/static/Images/temp";
-
 void addDensities(float **densities, Particle *particle, float *sqrtLookupTable, int x, int y, float effectRadius, float effectSquared) {
     float xdiff = fabsf(particle->x - x);
     float ydiff = fabsf(particle->y - y);
@@ -71,7 +69,7 @@ void generateSquareLookupTable(float *squareLookupTable, float maxDist) {
     }
 }
 
-void writeppm(char *truePath, uint8_t ***arr, int x, int y, int k) {
+void writeppm(const char *path, char *truePath, uint8_t ***arr, int x, int y, int k) {
     memset(truePath, '\0', sizeof(char) * (strlen(path) + strlen(".ppm") + 5));
     strcat(truePath, path);
     sprintf(&truePath[strlen(path)], "%d", k);
@@ -87,7 +85,7 @@ void writeppm(char *truePath, uint8_t ***arr, int x, int y, int k) {
     fclose(f);
 }
 
-void runStep(clock_t *timers, char *truePath, float *sqrtLookupTable, Box ***boxes, int xboxes, int yboxes, uint8_t ***arr, float **densities, int x, int y, int numparticles, Particle **particles, float effectRadius, float effectSquared, int frames, float dt, int phyPerGra, float gravx, float gravy, int iter) {
+void runStep(clock_t *timers, const char *path, char *truePath, float *sqrtLookupTable, Box ***boxes, int xboxes, int yboxes, uint8_t ***arr, float **densities, int x, int y, int numparticles, Particle **particles, float effectRadius, float effectSquared, int frames, float dt, int phyPerGra, float gravx, float gravy, int iter) {
     float pressureConstant = 1.0f;
     float boundry = 3.0f; // must be > 0
     int tempX, tempY;
@@ -286,21 +284,21 @@ void runStep(clock_t *timers, char *truePath, float *sqrtLookupTable, Box ***box
     //     arr[tempX][tempY][2] = 0;
     // }
     beginSim = clock();
-    writeppm(truePath, arr, x, y, iter);
+    writeppm(path, truePath, arr, x, y, iter);
     timers[3] += clock() - beginSim;
 }
 
-void runSimulation(clock_t *timers, char *truePath, float *sqrtLookupTable, Box ***boxes, int xboxes, int yboxes, uint8_t ***arr, float **densities, int x, int y, int numparticles, Particle **particles, float effectRadius, int frames, float dt, int phyPerGra, float gravx, float gravy) {
+void runSimulation(clock_t *timers, const char *path, char *truePath, float *sqrtLookupTable, Box ***boxes, int xboxes, int yboxes, uint8_t ***arr, float **densities, int x, int y, int numparticles, Particle **particles, float effectRadius, int frames, float dt, int phyPerGra, float gravx, float gravy) {
     float effectSquared = effectRadius*effectRadius;
     
     clock_t beginTraj = clock();
-    runStep(timers, truePath, sqrtLookupTable, boxes, xboxes, yboxes, arr, densities, x, y, numparticles, particles, effectRadius, effectSquared, frames, dt, phyPerGra, gravx, gravy, 0);
+    runStep(timers, path, truePath, sqrtLookupTable, boxes, xboxes, yboxes, arr, densities, x, y, numparticles, particles, effectRadius, effectSquared, frames, dt, phyPerGra, gravx, gravy, 0);
     clock_t endTraj = clock();
     printf("1 frame took: %f seconds\n", (double)(endTraj - beginTraj) / CLOCKS_PER_SEC);
     printf("program expected to take: %f seconds\n", (double)(endTraj - beginTraj) * frames / CLOCKS_PER_SEC);
     fflush(stdout);
     for (int i = 1; i < frames; i++) {
-        runStep(timers, truePath, sqrtLookupTable, boxes, xboxes, yboxes, arr, densities, x, y, numparticles, particles, effectRadius, effectSquared, frames, dt, phyPerGra, gravx, gravy, i);
+        runStep(timers, path, truePath, sqrtLookupTable, boxes, xboxes, yboxes, arr, densities, x, y, numparticles, particles, effectRadius, effectSquared, frames, dt, phyPerGra, gravx, gravy, i);
     }
 }
 
@@ -433,7 +431,7 @@ int main(int argc, char** argv) {
     timers[3] = 0;
     printf("creating particles\n");
     clock_t beginSim = clock();
-    runSimulation(timers, truePath, sqrtLookupTable, boxes, xboxes, yboxes, arr, densities, x, y, numParticle, particles, effectRadius, frames, dt, phyPerGra, gravx, gravy);
+    runSimulation(timers, path, truePath, sqrtLookupTable, boxes, xboxes, yboxes, arr, densities, x, y, numParticle, particles, effectRadius, frames, dt, phyPerGra, gravx, gravy);
     clock_t endSim = clock();
     printf("simulating %d particles at %d computational frames took: %f seconds\n", numParticle, frames * phyPerGra, (double)(endSim - beginSim) / CLOCKS_PER_SEC);
 
