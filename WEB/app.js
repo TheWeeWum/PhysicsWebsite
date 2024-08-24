@@ -76,13 +76,6 @@ app.post('/runFluid', upload.none(), (req, res) => {
         }
     });
 
-    pyProg.stdout.on('data', (data) => {
-        console.log(`stdout: ${data}`);
-    });
-    
-    pyProg.stderr.on('data', (data) => {
-        console.error(`stderr: ${data}`);
-    });
 
     pyProg.unref();
 });
