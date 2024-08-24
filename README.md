@@ -1,6 +1,6 @@
 This locally run website is designed to allow you to test various physics simulations!
 
-You can use the program yourself at <a href=https://liamcsiffary.com/>liamcsiffary.com<\a> (my website)
+You can use the program yourself at <a href=https://liamcsiffary.com/> (my website)
 
 So far there are 4 different working simulations
 
