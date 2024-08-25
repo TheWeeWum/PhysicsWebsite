@@ -71,7 +71,7 @@ app.post('/runFluid', upload.none(), (req, res) => {
         console.log(`Python script exited with code ${code}`);
         // Run additional code here
         if (!res.headersSent) { // Check if the response has already been sent
-            res.send('Python script executed successfully.');
+            res.send('Python script executed successfully.' + `Python script exited with code ${code}`);
         }
         pyProg.unref();
     });
