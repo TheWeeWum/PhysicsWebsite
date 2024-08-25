@@ -55,7 +55,7 @@ app.post('/runFluid', upload.none(), (req, res) => {
     console.log('Form Data:', JSON.stringify(formData));
 
     const { spawn } = require('child_process');
-    const pyProg = spawn('python', ['./CPrograms/Fluid/main.py', JSON.stringify(formData)], {
+    const pyProg = spawn('python', ['/CPrograms/Fluid/main.py', JSON.stringify(formData)], {
         // detached: true,
         stdio: 'ignore'
     });
@@ -86,7 +86,7 @@ app.post('/runGravsim', upload.none(), (req, res) => {
     console.log('Form Data:', JSON.stringify(formData));
 
     const { spawn } = require('child_process');
-    const pyProg = spawn('python', ['./CPrograms/Gravity/main.py', JSON.stringify(formData)], {
+    const pyProg = spawn('python', ['/CPrograms/Gravity/main.py', JSON.stringify(formData)], {
         // detached: true,
         stdio: 'ignore'
     });
@@ -116,7 +116,7 @@ app.post('/runBounce', upload.none(), (req, res) => {
     console.log('Form Data:', JSON.stringify(formData));
 
     const { spawn } = require('child_process');
-    const pyProg = spawn('python', ['./CPrograms/Bounce/main.py', JSON.stringify(formData)], {
+    const pyProg = spawn('python', ['/CPrograms/Bounce/main.py', JSON.stringify(formData)], {
         // detached: true,
         stdio: 'ignore'
     });
@@ -146,7 +146,7 @@ app.post('/runOrbit', upload.none(), (req, res) => {
     console.log('Form Data:', JSON.stringify(formData));
 
     const { spawn } = require('child_process');
-    const pyProg = spawn('python', ['./CPrograms/Orbit/main.py', JSON.stringify(formData)], {
+    const pyProg = spawn('python', ['/CPrograms/Orbit/main.py', JSON.stringify(formData)], {
         // detached: true,
         stdio: 'ignore'
     });
