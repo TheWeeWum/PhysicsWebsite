@@ -60,6 +60,13 @@ app.post('/runFluid', upload.none(), (req, res) => {
         stdio: 'ignore'
     });
 
+    pyProg.on('error', (err) => {
+        console.error('Failed to start subprocess.', err);
+        if (!res.headersSent) { // Check if the response has already been sent
+            res.status(500).send('Failed to execute Python script.');
+        }
+    });
+
     pyProg.on('exit', (code) => {
         console.log(`Python script exited with code ${code}`);
         // Run additional code here
@@ -67,13 +74,6 @@ app.post('/runFluid', upload.none(), (req, res) => {
             res.send('Python script executed successfully.');
         }
         pyProg.unref();
-    });
-
-    pyProg.on('error', (err) => {
-        console.error('Failed to start subprocess.', err);
-        if (!res.headersSent) { // Check if the response has already been sent
-            res.status(500).send('Failed to execute Python script.');
-        }
     });
 
 
