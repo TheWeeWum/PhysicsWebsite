@@ -1,8 +1,6 @@
 #include "orbit.h"
 
-const char *path = "C:/Users/liamc/VSCode/PhysicsWebsite/WEB/static/Images/temp";
-
-void writeppm(uint8_t ***arr, int x, int y, int k) {
+void writeppm(const char *path, uint8_t ***arr, int x, int y, int k) {
     char *truePath = malloc(sizeof(char) * (strlen(path) + strlen(".ppm") + 5));
     memset(truePath, '\0', sizeof(char) * (strlen(path) + strlen(".ppm") + 5));
     strcat(truePath, path);
@@ -19,7 +17,7 @@ void writeppm(uint8_t ***arr, int x, int y, int k) {
     fclose(f);
 }
 
-void runStep(uint8_t ***arr, int x, int y, int numTrajectories, Trajectory **trjcts, double universalConstant, int frames, double dt, int phyPerGra, int iter) {
+void runStep(const char *path, uint8_t ***arr, int x, int y, int numTrajectories, Trajectory **trjcts, double universalConstant, int frames, double dt, int phyPerGra, int iter) {
     int **drawCoords = malloc(sizeof(int*) * numTrajectories);
 
     double *deltaX = malloc(sizeof(double) * numTrajectories);
@@ -79,7 +77,7 @@ void runStep(uint8_t ***arr, int x, int y, int numTrajectories, Trajectory **trj
     free(deltaY);
 
 
-    writeppm(arr, x, y, iter);
+    writeppm(path, arr, x, y, iter);
     for (int i = 0; i < numTrajectories; i++) {
         int *pt = drawCoords[i];
         for (int j = 0; j < 3; j++) arr[(int)(pt[0])][(int)(pt[1])][j] = 0;
@@ -88,29 +86,30 @@ void runStep(uint8_t ***arr, int x, int y, int numTrajectories, Trajectory **trj
     free(drawCoords);
 }
 
-void runSimulation(uint8_t ***arr, int x, int y, int numTrajectories, Trajectory **trjcts, double universalConstant, int frames, double dt, int phyPerGra) {
+void runSimulation(const char *path, uint8_t ***arr, int x, int y, int numTrajectories, Trajectory **trjcts, double universalConstant, int frames, double dt, int phyPerGra) {
     clock_t beginTraj = clock();
-    runStep(arr, x, y, numTrajectories, trjcts, universalConstant, frames, dt, phyPerGra, 0);
+    runStep(path, arr, x, y, numTrajectories, trjcts, universalConstant, frames, dt, phyPerGra, 0);
     clock_t endTraj = clock();
     printf("1 frame took: %f seconds\n", (double)(endTraj - beginTraj) / CLOCKS_PER_SEC);
     printf("program expected to take: %f seconds\n", (double)(endTraj - beginTraj) * frames / CLOCKS_PER_SEC);
     fflush(stdout);
     for (int i = 1; i < frames; i++) {
-        runStep(arr, x, y, numTrajectories, trjcts, universalConstant, frames, dt, phyPerGra, i);
+        runStep(path, arr, x, y, numTrajectories, trjcts, universalConstant, frames, dt, phyPerGra, i);
     }
 }
 
 int main(int argc, char** argv) {
     printf("start\n");
-    int x = strtol(argv[1], NULL, 10);
-    int y = strtol(argv[2], NULL, 10);
-    int frames = strtol(argv[3], NULL, 10);
-    double dt = strtod(argv[4], NULL);
-    int phyPerGra = strtol(argv[5], NULL, 10);
-    double universalConstant = strtod(argv[6], NULL);
+    const char *path = argv[1];
+    int x = strtol(argv[2], NULL, 10);
+    int y = strtol(argv[3], NULL, 10);
+    int frames = strtol(argv[4], NULL, 10);
+    double dt = strtod(argv[5], NULL);
+    int phyPerGra = strtol(argv[6], NULL, 10);
+    double universalConstant = strtod(argv[7], NULL);
 
-    int numTraj = strtol(argv[7], NULL, 10);
-    int cIndex = 8;
+    int numTraj = strtol(argv[8], NULL, 10);
+    int cIndex = 9;
 
     // allocate and initialize the trajectory objects
     Trajectory **trajectories = malloc(sizeof(Trajectory*) * numTraj);
@@ -137,7 +136,7 @@ int main(int argc, char** argv) {
 
     printf("creating trajectories\n");
     clock_t beginTraj = clock();
-    runSimulation(arr, x, y, numTraj, trajectories, universalConstant, frames, dt, phyPerGra);
+    runSimulation(path, arr, x, y, numTraj, trajectories, universalConstant, frames, dt, phyPerGra);
     clock_t endTraj = clock();
     printf("creating %d trajectories took: %f seconds\n", numTraj, (double)(endTraj - beginTraj) / CLOCKS_PER_SEC);
 

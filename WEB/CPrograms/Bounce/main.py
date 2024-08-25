@@ -13,7 +13,6 @@ import sys
 print(sys.argv)
 data = json.loads(sys.argv[1])
 
-
 x = int(data['x'])
 y = int(data['y'])
 physicsPerGraphic = int(data['physicsPerGraphic'])  # 600
@@ -24,7 +23,9 @@ damping = float(data['damping'])  # 0.00001
 gravx = float(data['gravx'])  # 0
 gravy = float(data['gravy'])  # 9
 
-call_args = ["bounce.exe"]
+basePath = "C:\\Users\\liamc\\VSCode\\PhysicsWebsite\\WEB\\"
+imagePath = basePath + "static\\Images\\"
+call_args = ["bounce.exe", imagePath + 'temp']
 call_args.extend([f"{x}", f"{y}", f"{frames}", f"{dt}", f"{gravx}", f"{gravy}", f"{physicsPerGraphic}", f"{damping}"])
 
 points = []
@@ -111,9 +112,8 @@ time_after_program = time_ns()
 
 print(f"------ program took {time_after_program - time_before_program} ns")
 
-path = "C:\\Users\\liamc\\VSCode\\PhysicsWebsite\\WEB\\static\\Images\\"
-filenames = [path + f"temp{i}.ppm" for i in range(frames)]
-with imageio.get_writer(f'{path}bounce.gif', mode='I', fps=50, loop=0) as writer:
+filenames = [imagePath + f"temp{i}.ppm" for i in range(frames)]
+with imageio.get_writer(f'{imagePath}bounce.gif', mode='I', fps=50, loop=0) as writer:
     for filename in filenames:
         image = imageio.imread(filename)
         writer.append_data(image)

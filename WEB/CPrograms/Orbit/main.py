@@ -19,7 +19,10 @@ frames = int(data['frames'])  # 50*7
 dt = float(data['dt'])  # 0.00005
 universalConstant = float(data['universalConstant'])
 
-call_args = ["C://Users//liamc//VSCode//PhysicsWebsite//WEB//CPrograms//Orbit//orbit.exe"]
+basePath = "C:\\Users\\liamc\\VSCode\\physicsWebsite\\WEB\\"
+imagePath = basePath + "static\\Images\\"
+
+call_args = [basePath + "CPrograms//Orbit//orbit.exe", imagePath + 'temp']
 call_args.extend([f"{x}", f"{y}", f"{frames}", f"{dt}", f"{physicsPerGraphic}", f"{universalConstant}"])
 
 # mass, x, y, vx, vy
@@ -47,9 +50,8 @@ time_after_program = time_ns()
 
 print(f"------ program took {time_after_program - time_before_program} ns")
 
-path = "C:\\Users\\liamc\\VSCode\\physicsWebsite\\WEB\\static\\Images\\"
-filenames = [path + f"temp{i}.ppm" for i in range(frames)]
-with imageio.get_writer(f'{path}orbit.gif', mode='I', fps=50, loop=0) as writer:
+filenames = [imagePath + f"temp{i}.ppm" for i in range(frames)]
+with imageio.get_writer(f'{imagePath}orbit.gif', mode='I', fps=50, loop=0) as writer:
     for filename in filenames:
         image = imageio.imread(filename)
         writer.append_data(image)

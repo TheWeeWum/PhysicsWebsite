@@ -1,9 +1,6 @@
 #include "bounce.h"
 
-const char *path = "C:/Users/liamc/VSCode/PhysicsWebsite/WEB/static/Images/temp";
-
-void writeppm(uint8_t ***arr, int x, int y, int k) {
-    printf("HERE\n");
+void writeppm(const char *path, uint8_t ***arr, int x, int y, int k) {
     char *truePath = malloc(sizeof(char) * (strlen(path) + strlen(".ppm") + 5));
     memset(truePath, '\0', sizeof(char) * (strlen(path) + strlen(".ppm") + 5));
     strcat(truePath, path);
@@ -20,7 +17,7 @@ void writeppm(uint8_t ***arr, int x, int y, int k) {
     fclose(f);
 }
 
-void runStep(uint8_t ***arr, int x, int y, int numPoints, Point **points, int numSprings, Spring **springs, double dt, int iter, double gravx, double gravy, int phyPerGra, double damping) {
+void runStep(const char *path, uint8_t ***arr, int x, int y, int numPoints, Point **points, int numSprings, Spring **springs, double dt, int iter, double gravx, double gravy, int phyPerGra, double damping) {
     int **drawCoords = malloc(sizeof(int*) * numPoints);
 
     double *deltaX = malloc(sizeof(double) * numPoints);
@@ -96,7 +93,7 @@ void runStep(uint8_t ***arr, int x, int y, int numPoints, Point **points, int nu
     free(deltaY);
 
 
-    writeppm(arr, x, y, iter);
+    writeppm(path, arr, x, y, iter);
     for (int i = 0; i < numPoints; i++) {
         int *pt = drawCoords[i];
         for (int j = 0; j < 3; j++) arr[(int)(pt[0])][(int)(pt[1])][j] = 0;
@@ -105,25 +102,26 @@ void runStep(uint8_t ***arr, int x, int y, int numPoints, Point **points, int nu
     free(drawCoords);
 }
 
-void runSimulation(uint8_t ***arr, int x, int y, int frames, 
+void runSimulation(const char *path, uint8_t ***arr, int x, int y, int frames, 
                     int numPoints, Point **points, 
                     int numSprings, Spring **springs, 
                     double dt, double gravx, double gravy, int phyPerGra, double damping) {
     for (int i = 0; i < frames; i++) {
-        runStep(arr, x, y, numPoints, points, numSprings, springs, dt, i, gravx, gravy, phyPerGra, damping);
+        runStep(path, arr, x, y, numPoints, points, numSprings, springs, dt, i, gravx, gravy, phyPerGra, damping);
     }
 }
 
 int main(int argc, char **argv) {
     printf("starting program\n");
-    int width = strtol(argv[1], NULL, 10);
-    int height = strtol(argv[2], NULL, 10);
-    int frames = strtol(argv[3], NULL, 10);
-    double dt = strtod(argv[4], NULL);
-    double gravx = strtod(argv[5], NULL);
-    double gravy = strtod(argv[6], NULL);
-    int phyPerGra = strtol(argv[7], NULL, 10);
-    double damping = strtod(argv[8], NULL);
+    const char *path = argv[1];
+    int width = strtol(argv[2], NULL, 10);
+    int height = strtol(argv[3], NULL, 10);
+    int frames = strtol(argv[4], NULL, 10);
+    double dt = strtod(argv[5], NULL);
+    double gravx = strtod(argv[6], NULL);
+    double gravy = strtod(argv[7], NULL);
+    int phyPerGra = strtol(argv[8], NULL, 10);
+    double damping = strtod(argv[9], NULL);
 
     uint8_t ***arr = malloc(sizeof(uint8_t**) * width);
     if (arr == NULL) perror("malloc");
@@ -184,13 +182,13 @@ int main(int argc, char **argv) {
 
     printf("running simulation\n");
     clock_t beginSim = clock();
-    runSimulation(arr, width, height, frames, numPoints, points, numSprings, springs, dt, gravx, gravy, phyPerGra, damping);
+    runSimulation(path, arr, width, height, frames, numPoints, points, numSprings, springs, dt, gravx, gravy, phyPerGra, damping);
     clock_t endSim = clock();
     printf("running simulation took: %f seconds\n", (double)(endSim - beginSim) / CLOCKS_PER_SEC);
 
     printf("writing pixel data\n");
     clock_t beginDraw = clock();
-    writeppm(arr, width, height, frames);
+    writeppm(path, arr, width, height, frames);
     clock_t endDraw = clock();
     printf("writing ppms took: %f seconds\n", (double)(endDraw - beginDraw) / CLOCKS_PER_SEC);
 

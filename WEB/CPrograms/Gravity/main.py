@@ -97,8 +97,10 @@ trajectories = []
 #       [x/2, y/3+y/15, 7.971, 0, 1]
 # ]
 
+basePath = "C://Users//liamc//VSCode//PhysicsWebsite//WEB//"
+imagePath = basePath + "static/Images/"
 
-call_args = ["C://Users//liamc//VSCode//PhysicsWebsite//WEB//CPrograms//Gravity//gravsim.exe"]
+call_args = [basePath + "CPrograms//Gravity//gravsim.exe", imagePath + "gravsim.ppm"]
 call_args.extend([f"{x}", f"{y}", f"{linesPer}", f"{color}", f"{len(objects)}"])
 for obj in objects:
       call_args.extend([f"{obj[0]}", f"{obj[1]}", f"{obj[2]}"])
@@ -115,9 +117,9 @@ time_after_program = time_ns()
 
 print(f"------ program took {time_after_program - time_before_program} ns")
 
-im = Image.open("static/Images/gravsim.ppm")
+im = Image.open(imagePath + "gravsim.ppm")
 print("------ saving images ------")
-im.save("static/Images/gravsim.png")
+im.save(imagePath + "gravsim.png")
 time_after_image_convert = time_ns()
 print(f"------ saving image took {time_after_image_convert - time_after_program} ns")
 

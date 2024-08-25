@@ -130,8 +130,8 @@ void drawLines(int ***arr, int x, int y, Object **objs, int numObjs, int linesPe
     int j = 0;
     while (j < numObjs) {
         for (int k = 0; k < linesPer; k++) {
-            startingPoints[j*linesPer+k][0] = objs[j]->x + sqrt(2) * (sin((double)k/(double)linesPer * 2*M_PI) * sqrt(fabs(objs[j]->mass) * 25 * scaleFactor));
-            startingPoints[j*linesPer+k][1] = objs[j]->y + sqrt(2) * (cos((double)k/(double)linesPer * 2*M_PI) * sqrt(fabs(objs[j]->mass) * 25 * scaleFactor));
+            startingPoints[j*linesPer+k][0] = objs[j]->x + sqrt(2) * (sin((double)k/(double)linesPer * 2*3.141593) * sqrt(fabs(objs[j]->mass) * 25 * scaleFactor));
+            startingPoints[j*linesPer+k][1] = objs[j]->y + sqrt(2) * (cos((double)k/(double)linesPer * 2*3.141593) * sqrt(fabs(objs[j]->mass) * 25 * scaleFactor));
             if (objs[j]->mass < 0) {
                 startingPoints[j*linesPer+k][2] = -1.0;
             } else {
@@ -248,12 +248,13 @@ void createTrajectory(int ***arr, int x, int y, Object **objs, int numObjs, Traj
 int main(int argc, char** argv) {
     printf("start\n");
     int cIndex = 1;
-    int x = strtol(argv[1], NULL, 10);
-    int y = strtol(argv[2], NULL, 10);
-    int numLines = strtol(argv[3], NULL, 10);
-    int color = strtol(argv[4], NULL, 10);
-    int numObjs = strtol(argv[5], NULL, 10);
-    cIndex += 5;
+    const char *path = argv[1];
+    int x = strtol(argv[2], NULL, 10);
+    int y = strtol(argv[3], NULL, 10);
+    int numLines = strtol(argv[4], NULL, 10);
+    int color = strtol(argv[5], NULL, 10);
+    int numObjs = strtol(argv[6], NULL, 10);
+    cIndex += 6;
 
     // allocate and initialize the objects
     Object **objs = malloc(sizeof(Object*) * numObjs);
@@ -308,7 +309,7 @@ int main(int argc, char** argv) {
     clock_t endTraj = clock();
     printf("creating %d trajectories took: %f seconds\n", numTraj, (double)(endTraj - beginTraj) / CLOCKS_PER_SEC);
 
-    FILE *f = fopen("static/Images/gravsim.ppm", "w");
+    FILE *f = fopen(path, "w");
     if (f == NULL) {
         perror("fopen");
         exit(1);
