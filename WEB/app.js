@@ -19,6 +19,8 @@ app.use(express.static('static'));
 // app.use(express.static(path.join(__dirname, 'images')));
 
 // ----------------- Handling Basic GET requests ---------------------
+console.log(path.join(__dirname,'CPrograms/Fluid/main.py'));
+
 app.get(['/', '/index', '/index.html'],function(req,res){      
     res.sendFile(path.join(__dirname,'static/index.html'));
 });
@@ -70,7 +72,7 @@ app.post('/runFluid', upload.none(), (req, res) => {
     console.log('Form Data:', JSON.stringify(formData));
 
     const { spawn } = require('child_process');
-    const pyProg = spawn('python3', [path.join(__dirname, 'CPrograms/Fluid/main.py'), JSON.stringify(formData)], {
+    const pyProg = spawn('python', [path.join(__dirname, 'CPrograms/Fluid/main.py'), JSON.stringify(formData)], {
         // detached: true,
         stdio: 'ignore'
     });
