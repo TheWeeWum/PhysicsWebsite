@@ -40,7 +40,7 @@ li {
 }
 a {
     color: #ddd;
-    text-decoration: none;
+    /* text-decoration: none; */
     transition: color 0.3s;
 }
 a:hover {
