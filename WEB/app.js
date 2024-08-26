@@ -48,6 +48,22 @@ app.get('/powder',function(req,res){
     res.sendFile(path.join(__dirname,'static/powder.html'));
 });
 
+app.get('/aboutme',function(req,res){      
+    res.sendFile(path.join(__dirname,'static/aboutme.html'));
+});
+
+app.get('/projects',function(req,res){      
+    res.sendFile(path.join(__dirname,'static/projects.html'));
+});
+
+app.get('/contact',function(req,res){      
+    res.sendFile(path.join(__dirname,'static/contact.html'));
+});
+
+app.get('/physicsPrograms',function(req,res){      
+    res.sendFile(path.join(__dirname,'static/physicsPrograms.html'));
+});
+
 // ----------------- Handling python POST requests -------------------
 app.post('/runFluid', upload.none(), (req, res) => {
     const formData = req.body;

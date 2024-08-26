@@ -1,3 +1,25 @@
+main {
+    padding: 20px;
+}
+
+section {
+    max-width: 70%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: rgba(256, 256, 256, 0.9);
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 0 30px #000000;
+}
+
+section h1, section h2, section h3, section p {
+    color: #000000;
+}
+
+h4 {
+    margin-bottom: 6px;
+}
+
 body {
     background-color: #1e1e1e;
     color: #ddd;
