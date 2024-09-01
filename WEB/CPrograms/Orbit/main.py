@@ -1,13 +1,11 @@
 import os
 from subprocess import call
-from PIL import Image
-from random import randint
 from time import time_ns
-from math import sqrt, sin, cos, pi
 import imageio
 
 import json
 import sys
+import platform
 
 print(sys.argv)
 data = json.loads(sys.argv[1])
@@ -19,10 +17,16 @@ frames = int(data['frames'])  # 50*7
 dt = float(data['dt'])  # 0.00005
 universalConstant = float(data['universalConstant'])
 
-basePath = "C:\\Users\\liamc\\VSCode\\physicsWebsite\\WEB\\"
-imagePath = basePath + "static\\Images\\"
+if platform.system() == "Linux":
+    basePath = "var/www/PhysicsWebsite/WEB/"
+else: 
+    basePath = "C:/Users/liamc/VSCode/PhysicsWebsite/WEB/"
 
-call_args = [basePath + "CPrograms//Orbit//orbit.exe", imagePath + 'temp']
+imagePath = basePath + "static/Images/"
+if platform.system() == "Linux":
+    call_args = [basePath + "CPrograms/Orbit/orbit", imagePath + 'temp']
+else:
+    call_args = [basePath + "CPrograms/Orbit/orbit.exe", imagePath + 'temp']
 call_args.extend([f"{x}", f"{y}", f"{frames}", f"{dt}", f"{physicsPerGraphic}", f"{universalConstant}"])
 
 # mass, x, y, vx, vy

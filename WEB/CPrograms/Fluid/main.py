@@ -1,14 +1,11 @@
 import os
 from subprocess import call
-from PIL import Image
-from random import randint, random
-import random as r
 from time import time_ns
-from math import sqrt, sin, cos, pi
 import imageio
 
 import json
 import sys
+import platform
 
 print(sys.argv)
 data = json.loads(sys.argv[1])
@@ -31,9 +28,17 @@ gravy = float(data['gravy'])
 # gravx = 0
 # gravy = 0
 
-generalPath = "C:/Users/liamc/VSCode/PhysicsWebsite/WEB/"
+if platform.system() == "Linux":
+    generalPath = "var/www/PhysicsWebsite/WEB/"
+else: 
+    generalPath = "C:/Users/liamc/VSCode/PhysicsWebsite/WEB/"
+
 imagePath = generalPath + "static/Images/"
-call_args = [generalPath + "CPrograms/Fluid/fluid.exe", imagePath + 'temp']
+if platform.system() == "Linux":
+    call_args = [generalPath + "CPrograms/Fluid/fluid", imagePath + 'temp']
+else:
+    call_args = [generalPath + "CPrograms/Fluid/fluid.exe", imagePath + 'temp']
+
 call_args.extend([f"{x}", f"{y}", f"{frames}", f"{dt}", f"{physicsPerGraphic}", f"{effectRadius}", f"{gravx}", f"{gravy}"])
 
 # mass, x, y, vx, vy

@@ -1,12 +1,11 @@
 import os
 from subprocess import call
 from PIL import Image
-from random import randint
 from time import time_ns
-from math import sqrt, sin, cos, pi
 
 import json
 import sys
+import platform
 
 print(sys.argv)
 data = json.loads(sys.argv[1])
@@ -97,11 +96,20 @@ trajectories = []
 #       [x/2, y/3+y/15, 7.971, 0, 1]
 # ]
 
-basePath = "C://Users//liamc//VSCode//PhysicsWebsite//WEB//"
-imagePath = basePath + "static/Images/"
+if platform.system() == "Linux":
+    basePath = "var/www/PhysicsWebsite/WEB/"
+else: 
+    basePath = "C:/Users/liamc/VSCode/PhysicsWebsite/WEB/"
 
-call_args = [basePath + "CPrograms//Gravity//gravsim.exe", imagePath + "gravsim.ppm"]
+imagePath = basePath + "static/Images/"
+if platform.system() == "Linux":
+    call_args = [basePath + "CPrograms/Gravity/gravsim", imagePath + 'gravsim.ppm']
+else:
+    call_args = [basePath + "CPrograms/Gravity/gravsim.exe", imagePath + 'gravsim.ppm']
+    
 call_args.extend([f"{x}", f"{y}", f"{linesPer}", f"{color}", f"{len(objects)}"])
+
+
 for obj in objects:
       call_args.extend([f"{obj[0]}", f"{obj[1]}", f"{obj[2]}"])
 
