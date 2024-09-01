@@ -31,6 +31,36 @@
         <button type="submit">Run Program</button>
 
         <div class="input-group-size">
+            <label for="size">Display Particles (turns on or off the visibility of the particles)</label>
+            <div class="slidecontainer">
+                <input type="range" min="0" max="1" value="1" class="slider" id="pressureView" name="pressureView" required>
+                <p class="sliderValue"> : <input class="typeInput" type="number" min="" max="" id="pressureViewOut"></input></p>
+            </div>
+        </div>
+        <div class="input-group-size">
+            <label for="size">Display Pressure (turns on or off the visibility of the pressure gradient)</label>
+            <div class="slidecontainer">
+                <input type="range" min="0" max="1" value="0" class="slider" id="particleView" name="particleView" required>
+                <p class="sliderValue"> : <input class="typeInput" type="number" min="" max="" id="particleViewOut"></input></p>
+            </div>
+        </div>
+
+        <div class="input-group-size">
+            <label for="size">Pressure Constant (scales the force associated with particle proximity) (0.01 to 10)</label>
+            <div class="slidecontainer">
+                <input type="range" min="0.01" max="10" step="0.01" value="1" class="slider" id="pressureConstant" name="pressureConstant" required>
+                <p class="sliderValue"> : <input class="typeInput" type="number" id="pressureConstantOut"></input></p>
+            </div>
+        </div>
+        <div class="input-group-size">
+            <label for="size">Viscosity (increases the velocity smoothing of nearby particles) (0 to 10)</label>
+            <div class="slidecontainer">
+                <input type="range" min="0" max="10" step="0.001" value="1" class="slider" id="viscosity" name="viscosity" required>
+                <p class="sliderValue"> : <input class="typeInput" type="number" id="viscosityOut"></input></p>
+            </div>
+        </div>
+
+        <div class="input-group-size">
             <label for="size">X (10 to 150) (Size of the video to generate in pixels)</label>
             <div class="slidecontainer">
                 <input type="range" min="10" max="150" value="100" class="slider" id="x" name="x" required>

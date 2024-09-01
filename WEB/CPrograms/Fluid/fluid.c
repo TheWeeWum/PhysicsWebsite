@@ -24,7 +24,7 @@ void addDensities(float **densities, Particle *particle, float *sqrtLookupTable,
     densities[x][y] += particle->mass * ((effectRadius/sqrtf(inner)) - 1);
 }
 
-void runInteraction(Particle *particle, Particle *other, float *sqrtLookupTable, float effectRadius, float effectSquared, float dt, float pressureConstant) {
+void runInteraction(Particle *particle, Particle *other, float *sqrtLookupTable, float effectRadius, float effectSquared, float dt, float pressureConstant, float viscosity) {
     float distX = other->x - particle->x;
     float distY = other->y - particle->y;
 
@@ -49,7 +49,23 @@ void runInteraction(Particle *particle, Particle *other, float *sqrtLookupTable,
     // float dist = sqrtLookupTable[(int)inner];
 
     // float temp = dt * pressureConstant * (other->mass/particle->mass) * ((effectRadius/sqrtLookupTable[MAX((int)(inner*100), 1)]) - 1)/2;
-    float temp = dt * pressureConstant * (other->mass/particle->mass) * ((effectRadius/sqrtf(inner)) - 1)/2;
+    float dist = sqrtf(inner);
+    float temp = dt * ((effectRadius/dist) - 1)/2;
+
+    // add viscocity
+    if (temp < 1) {
+        particle->vx -= (particle->vx-other->vx) * viscosity * temp / 10;
+        particle->vy -= (particle->vy-other->vy) * viscosity * temp / 10;
+        other->vx += (particle->vx-other->vx) * viscosity * temp / 10;
+        other->vy += (particle->vy-other->vy) * viscosity * temp / 10;
+    } else {
+        particle->vx -= (particle->vx-other->vx) * viscosity / 10;
+        particle->vy -= (particle->vy-other->vy) * viscosity / 10;
+        other->vx += (particle->vx-other->vx) * viscosity / 10;
+        other->vy += (particle->vy-other->vy) * viscosity / 10;
+    }
+
+    temp = temp * pressureConstant * (other->mass/particle->mass);
 
     particle->vx -= distX * temp;
     particle->vy -= distY * temp;
@@ -85,8 +101,7 @@ void writeppm(const char *path, char *truePath, uint8_t ***arr, int x, int y, in
     fclose(f);
 }
 
-void runStep(clock_t *timers, const char *path, char *truePath, float *sqrtLookupTable, Box ***boxes, int xboxes, int yboxes, uint8_t ***arr, float **densities, int x, int y, int numparticles, Particle **particles, float effectRadius, float effectSquared, int frames, float dt, int phyPerGra, float gravx, float gravy, int iter) {
-    float pressureConstant = 1.0f;
+void runStep(clock_t *timers, const char *path, char *truePath, float *sqrtLookupTable, Box ***boxes, int xboxes, int yboxes, uint8_t ***arr, float **densities, int x, int y, int numparticles, Particle **particles, float effectRadius, float effectSquared, int frames, float dt, int phyPerGra, float gravx, float gravy, int iter, int pressureView, int particleView, float pressureConstant, float viscosity) {
     float boundry = 3.0f; // must be > 0
     int tempX, tempY;
     int bx, by, dx, dy, neighborX, neighborY;
@@ -111,7 +126,7 @@ void runStep(clock_t *timers, const char *path, char *truePath, float *sqrtLooku
                             Box *neighborBox = boxes[neighborX][neighborY];
                             for (int q = 0; q < neighborBox->numParticles; q++) {
                                 Particle *other = neighborBox->particleIndecies[q];
-                                runInteraction(particle, other, sqrtLookupTable, effectRadius, effectSquared, dt, pressureConstant);
+                                runInteraction(particle, other, sqrtLookupTable, effectRadius, effectSquared, dt, pressureConstant, viscosity);
                             }
                         }
                     }
@@ -124,17 +139,21 @@ void runStep(clock_t *timers, const char *path, char *truePath, float *sqrtLooku
             Particle *particle = particles[p];
 
             if (particle->x < boundry) {
+                particle->x = boundry;
                 // particle->x += 0.01f;
                 particle->vx = fabsf(particle->vx) * 0.9f;
             } else if (particle->x > x - boundry) {
+                particle->x = x - boundry;
                 // particle->x -= 0.01f;
                 particle->vx = -fabsf(particle->vx) * 0.9f;
             }
 
             if (particle->y < boundry) {
+                particle->y = boundry;
                 // particle->y += 0.01f;
                 particle->vy = fabsf(particle->vy) * 0.9f;
             } else if (particle->y > y - boundry) {
+                particle->y = y - boundry;
                 // particle->y -= 0.01f;
                 particle->vy = -fabsf(particle->vy) * 0.9f;
             }
@@ -174,48 +193,135 @@ void runStep(clock_t *timers, const char *path, char *truePath, float *sqrtLooku
     }
     timers[0] += clock() - beginSim;
 
-    // calculate densities
-    float maxDensity = 0.0f;
-    float totalDensity = 0.0f;
-    beginSim = clock();
-    for (int child = 0; child < 4; child++) {
+    if (pressureView == 1) {
+        // calculate densities
+        float maxDensity = 0.0f;
+        float totalDensity = 0.0f;
+        beginSim = clock();
+        for (int i = 0; i < x; i++) {
+            for (int j = 0; j < y; j++) {
+                densities[i][j] = 0.0f;
 
-    }
-    for (int i = 0; i < x; i++) {
-        for (int j = 0; j < y; j++) {
-            densities[i][j] = 0.0f;
+                bx = GETXBOX(i, effectRadius);
+                by = GETYBOX(j, effectRadius);
+                // Check neighboring boxes
+                for (dx = -1; dx <= 1; dx++) {
+                    for (dy = -1; dy <= 1; dy++) {
+                        neighborX = bx + dx;
+                        neighborY = by + dy;
+                        if (neighborX < 0 || neighborX >= xboxes || neighborY < 0 || neighborY >= yboxes) continue;
+                        Box *box = boxes[neighborX][neighborY];
 
-            bx = GETXBOX(i, effectRadius);
-            by = GETYBOX(j, effectRadius);
-            // Check neighboring boxes
-            for (dx = -1; dx <= 1; dx++) {
-                for (dy = -1; dy <= 1; dy++) {
-                    neighborX = bx + dx;
-                    neighborY = by + dy;
-                    if (neighborX < 0 || neighborX >= xboxes || neighborY < 0 || neighborY >= yboxes) continue;
-                    Box *box = boxes[neighborX][neighborY];
-
-                    // loop through each particle in the box
-                    for (int p = 0; p < box->numParticles; p++) {
-                        Particle *particle = box->particleIndecies[p];
-                        addDensities(densities, particle, sqrtLookupTable, i, j, effectRadius, effectSquared);
+                        // loop through each particle in the box
+                        for (int p = 0; p < box->numParticles; p++) {
+                            Particle *particle = box->particleIndecies[p];
+                            addDensities(densities, particle, sqrtLookupTable, i, j, effectRadius, effectSquared);
+                        }
                     }
                 }
+                totalDensity += densities[i][j];
+                if (densities[i][j] > maxDensity) maxDensity = densities[i][j];
             }
-            totalDensity += densities[i][j];
-            if (densities[i][j] > maxDensity) maxDensity = densities[i][j];
+        }
+        
+        timers[1] += clock() - beginSim;
+
+        float averageDensity = totalDensity / ((x-boundry)*(y-boundry));
+
+        // for asthetics
+        // averageDensity *= 1.1f;
+        
+        // draw the particles
+        beginSim = clock();
+        for (int i = boundry; i < x-boundry; i++) {
+            for (int j = boundry; j < y-boundry; j++) {
+                if (i < (int)boundry || j < (int)boundry || i > (x-(int)boundry) || j > (y-(int)boundry)) {
+                    arr[i][j][0] = 0;
+                    arr[i][j][1] = 0;
+                    arr[i][j][2] = 0;
+                    continue;
+                }
+                if ((i == (int)boundry || i == x-(int)boundry-1) && (j >= (int)boundry && j <= y-(int)boundry-1)) {
+                    arr[i][j][0] = 255;
+                    arr[i][j][1] = 255;
+                    arr[i][j][2] = 255;
+                    continue;
+                } 
+                if ((j == (int)boundry || j == y-(int)boundry-1) && (i >= (int)boundry && i <= x-(int)boundry-1)) {
+                    arr[i][j][0] = 255;
+                    arr[i][j][1] = 255;
+                    arr[i][j][2] = 255;
+                    continue;
+                }
+
+                float sepratation = 0.0f;
+                int minVal = 0;
+                int invert = 1;
+
+                // averageDensity = maxDensity/2;
+
+                // arr[i][j][0] = (int)(255 * densities[i][j] / maxDensity);
+                // arr[i][j][1] = 0;
+                // arr[i][j][2] = 0;
+
+                if (densities[i][j] > averageDensity*(1.0f + sepratation)) {
+                    arr[i][j][0] = (int)(255 * (densities[i][j]-averageDensity+minVal) / (maxDensity-averageDensity+minVal));
+                    arr[i][j][1] = 0;
+                    arr[i][j][2] = 0;
+                }
+                else if (densities[i][j] <= averageDensity*(1.0f - sepratation)) {
+                    arr[i][j][0] = 0;
+                    arr[i][j][1] = 0;
+                    if (invert == 0) {
+                        if (densities[i][j] == 0) arr[i][j][2] = 0;
+                        else arr[i][j][2] = (int)(255 * (averageDensity-densities[i][j]+minVal) / (averageDensity+minVal));
+                    } else {
+                        arr[i][j][2] = (int)(255 * (densities[i][j]+minVal) / (averageDensity+minVal));
+                    }
+                }
+                else {
+                    arr[i][j][0] = (int)(255 * (densities[i][j]/maxDensity));
+                    arr[i][j][1] = (int)(255 * (densities[i][j]/maxDensity));
+                    arr[i][j][2] = (int)(255 * (densities[i][j]/maxDensity));
+                }
+            }
+        }
+        timers[2] += clock() - beginSim;
+    } else {
+        for (int i = 0; i < x; i++) {
+            for (int j = 0; j < y; j++) {
+                arr[i][j][0] = 0;
+                arr[i][j][1] = 0;
+                arr[i][j][2] = 0;
+            }
         }
     }
-    
-    timers[1] += clock() - beginSim;
 
-    float averageDensity = totalDensity / ((x-boundry)*(y-boundry));
+    if (particleView == 1) {
+        float maxParticleSpeed = 0.0f;
+        for (int p = 0; p < numparticles; p++) {
+            if (particles[p]->vx*particles[p]->vx + particles[p]->vy*particles[p]->vy > maxParticleSpeed) {
+                maxParticleSpeed = particles[p]->vx*particles[p]->vx + particles[p]->vy*particles[p]->vy;
+            }
+        }
 
-    // for asthetics
-    // averageDensity *= 1.1f;
-    
-    // draw the particles
-    beginSim = clock();
+        for (int p = 0; p < numparticles; p++) {
+            tempX = (int)(particles[p]->x);
+            tempY = (int)(particles[p]->y);
+
+            if (tempX < (int)boundry || tempY < (int)boundry || tempX > (x-(int)boundry-1) || tempY > (y-(int)boundry-1)) {
+                continue;
+            }
+
+            int color = (int)(255 * sqrtf(particles[p]->vx*particles[p]->vx + particles[p]->vy*particles[p]->vy) / sqrtf(maxParticleSpeed));
+
+            arr[tempX][tempY][0] = color;
+            arr[tempX][tempY][1] = 0;
+            arr[tempX][tempY][2] = 255 - color;
+        }
+    }
+
+    // draw boundry
     for (int i = boundry; i < x-boundry; i++) {
         for (int j = boundry; j < y-boundry; j++) {
             if (i < (int)boundry || j < (int)boundry || i > (x-(int)boundry) || j > (y-(int)boundry)) {
@@ -236,69 +342,25 @@ void runStep(clock_t *timers, const char *path, char *truePath, float *sqrtLooku
                 arr[i][j][2] = 255;
                 continue;
             }
-
-            float sepratation = 0.0f;
-            int minVal = 0;
-            int invert = 1;
-
-            // averageDensity = maxDensity/2;
-
-            // arr[i][j][0] = (int)(255 * densities[i][j] / maxDensity);
-            // arr[i][j][1] = 0;
-            // arr[i][j][2] = 0;
-
-            if (densities[i][j] > averageDensity*(1.0f + sepratation)) {
-                arr[i][j][0] = (int)(255 * (densities[i][j]-averageDensity+minVal) / (maxDensity-averageDensity+minVal));
-                arr[i][j][1] = 0;
-                arr[i][j][2] = 0;
-            }
-            else if (densities[i][j] <= averageDensity*(1.0f - sepratation)) {
-                arr[i][j][0] = 0;
-                arr[i][j][1] = 0;
-                if (invert == 0) {
-                    if (densities[i][j] == 0) arr[i][j][2] = 0;
-                    else arr[i][j][2] = (int)(255 * (averageDensity-densities[i][j]+minVal) / (averageDensity+minVal));
-                } else {
-                    arr[i][j][2] = (int)(255 * (densities[i][j]+minVal) / (averageDensity+minVal));
-                }
-            }
-            else {
-                arr[i][j][0] = (int)(255 * (densities[i][j]/maxDensity));
-                arr[i][j][1] = (int)(255 * (densities[i][j]/maxDensity));
-                arr[i][j][2] = (int)(255 * (densities[i][j]/maxDensity));
-            }
         }
     }
-    timers[2] += clock() - beginSim;
 
-    // for (int p = 0; p < numparticles; p++) {
-    //     tempX = (int)(particles[p]->x);
-    //     tempY = (int)(particles[p]->y);
-
-    //     if (tempX < (int)boundry || tempY < (int)boundry || tempX > (x-(int)boundry-1) || tempY > (y-(int)boundry-1)) {
-    //         continue;
-    //     }
-
-    //     arr[tempX][tempY][0] = 0;
-    //     arr[tempX][tempY][1] = 255;
-    //     arr[tempX][tempY][2] = 0;
-    // }
     beginSim = clock();
     writeppm(path, truePath, arr, x, y, iter);
     timers[3] += clock() - beginSim;
 }
 
-void runSimulation(clock_t *timers, const char *path, char *truePath, float *sqrtLookupTable, Box ***boxes, int xboxes, int yboxes, uint8_t ***arr, float **densities, int x, int y, int numparticles, Particle **particles, float effectRadius, int frames, float dt, int phyPerGra, float gravx, float gravy) {
+void runSimulation(clock_t *timers, const char *path, char *truePath, float *sqrtLookupTable, Box ***boxes, int xboxes, int yboxes, uint8_t ***arr, float **densities, int x, int y, int numparticles, Particle **particles, float effectRadius, int frames, float dt, int phyPerGra, float gravx, float gravy, int particleView, int pressureView, float pressureConstant, float viscosity) {
     float effectSquared = effectRadius*effectRadius;
     
     clock_t beginTraj = clock();
-    runStep(timers, path, truePath, sqrtLookupTable, boxes, xboxes, yboxes, arr, densities, x, y, numparticles, particles, effectRadius, effectSquared, frames, dt, phyPerGra, gravx, gravy, 0);
+    runStep(timers, path, truePath, sqrtLookupTable, boxes, xboxes, yboxes, arr, densities, x, y, numparticles, particles, effectRadius, effectSquared, frames, dt, phyPerGra, gravx, gravy, 0, pressureView, particleView, pressureConstant, viscosity);
     clock_t endTraj = clock();
     printf("1 frame took: %f seconds\n", (double)(endTraj - beginTraj) / CLOCKS_PER_SEC);
     printf("program expected to take: %f seconds\n", (double)(endTraj - beginTraj) * frames / CLOCKS_PER_SEC);
     fflush(stdout);
     for (int i = 1; i < frames; i++) {
-        runStep(timers, path, truePath, sqrtLookupTable, boxes, xboxes, yboxes, arr, densities, x, y, numparticles, particles, effectRadius, effectSquared, frames, dt, phyPerGra, gravx, gravy, i);
+        runStep(timers, path, truePath, sqrtLookupTable, boxes, xboxes, yboxes, arr, densities, x, y, numparticles, particles, effectRadius, effectSquared, frames, dt, phyPerGra, gravx, gravy, i, pressureView, particleView, pressureConstant, viscosity);
     }
 }
 
@@ -326,6 +388,12 @@ int main(int argc, char** argv) {
     float maxVX = strtof(argv[18], NULL);
     float minVY = strtof(argv[19], NULL);
     float maxVY = strtof(argv[20], NULL);
+
+    int pressureView = strtol(argv[21], NULL, 10);
+    int particleView = strtol(argv[22], NULL, 10);
+
+    float pressureConstant = strtof(argv[23], NULL);
+    float viscosity = strtof(argv[24], NULL);
 
     // int x = 100;
     // int y = 100;
@@ -431,7 +499,7 @@ int main(int argc, char** argv) {
     timers[3] = 0;
     printf("creating particles\n");
     clock_t beginSim = clock();
-    runSimulation(timers, path, truePath, sqrtLookupTable, boxes, xboxes, yboxes, arr, densities, x, y, numParticle, particles, effectRadius, frames, dt, phyPerGra, gravx, gravy);
+    runSimulation(timers, path, truePath, sqrtLookupTable, boxes, xboxes, yboxes, arr, densities, x, y, numParticle, particles, effectRadius, frames, dt, phyPerGra, gravx, gravy, pressureView, particleView, pressureConstant, viscosity);
     clock_t endSim = clock();
     printf("simulating %d particles at %d computational frames took: %f seconds\n", numParticle, frames * phyPerGra, (double)(endSim - beginSim) / CLOCKS_PER_SEC);
 

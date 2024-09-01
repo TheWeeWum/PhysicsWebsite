@@ -7,7 +7,6 @@ import json
 import sys
 import platform
 
-print(sys.argv)
 data = json.loads(sys.argv[1])
 
 x = int(data['x'])
@@ -59,6 +58,12 @@ max_vx = float(data['maxVX'])
 min_vy = float(data['minVY'])
 max_vy = float(data['maxVY'])
 
+pressureView = int(data['pressureView'])
+particleView = int(data['particleView'])
+
+pressureConstant = float(data['pressureConstant'])
+viscosity = float(data['viscosity'])
+
 # num_particles = 4500
 # min_mass = 1
 # max_mass = 1
@@ -85,7 +90,9 @@ call_args.extend([f"{num_particles}",
                   f"{min_x}", f"{max_x}", 
                   f"{min_y}", f"{max_y}",
                   f"{min_vx}", f"{max_vx}",
-                  f"{min_vy}", f"{max_vy}"])
+                  f"{min_vy}", f"{max_vy}",
+                  f"{pressureView}", f"{particleView}",
+                  f"{pressureConstant}", f"{viscosity}"])
 
 print(call_args)
 time_before_program = time_ns()

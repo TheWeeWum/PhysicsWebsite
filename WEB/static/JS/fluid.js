@@ -50,9 +50,19 @@ var outputMinVY = document.getElementById("minVYOut");
 var sliderMaxVY = document.getElementById("maxVY");
 var outputMaxVY = document.getElementById("maxVYOut");
 
+var sliderViewPressure = document.getElementById("pressureView");
+var outputViewPressure = document.getElementById("pressureViewOut");
+var sliderViewParticles = document.getElementById("particleView");
+var outputViewParticles = document.getElementById("particleViewOut");
 
-var sliders = [sliderX, sliderY, sliderFrames, sliderPhysicsFrames, sliderDT, sliderEffectRadius, sliderGravx, sliderGravy, sliderNumParticles, sliderMinMass, sliderMaxMass, sliderMinX, sliderMaxX, sliderMinY, sliderMaxY, sliderMinVX, sliderMaxVX, sliderMinVY, sliderMaxVY];
-var outputs = [outputX, outputY, outputFrames, outputPhysicsFrames, outputDT, outputEffectRadius, outputGravx, outputGravy, outputNumParticles, outputMinMass, outputMaxMass, outputMinX, outputMaxX, outputMinY, outputMaxY, outputMinVX, outputMaxVX, outputMinVY, outputMaxVY];
+var sliderPressureConstant = document.getElementById("pressureConstant");
+var outputPressureConstant = document.getElementById("pressureConstantOut");
+var sliderViscosity = document.getElementById("viscosity");
+var outputViscosity = document.getElementById("viscosityOut");
+
+
+var sliders = [sliderX, sliderY, sliderFrames, sliderPhysicsFrames, sliderDT, sliderEffectRadius, sliderGravx, sliderGravy, sliderNumParticles, sliderMinMass, sliderMaxMass, sliderMinX, sliderMaxX, sliderMinY, sliderMaxY, sliderMinVX, sliderMaxVX, sliderMinVY, sliderMaxVY, sliderViewParticles, sliderViewPressure, sliderPressureConstant, sliderViscosity];
+var outputs = [outputX, outputY, outputFrames, outputPhysicsFrames, outputDT, outputEffectRadius, outputGravx, outputGravy, outputNumParticles, outputMinMass, outputMaxMass, outputMinX, outputMaxX, outputMinY, outputMaxY, outputMinVX, outputMaxVX, outputMinVY, outputMaxVY, outputViewParticles, outputViewPressure, outputPressureConstant, outputViscosity];
 
 for (var i = 0; i < sliders.length; i++) {
   outputs[i].value = sliders[i].value;
