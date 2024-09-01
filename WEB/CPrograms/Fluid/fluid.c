@@ -323,7 +323,7 @@ int main(int argc, char** argv) {
     float minY = strtof(argv[15], NULL);
     float maxY = strtof(argv[16], NULL);
     float minVX = strtof(argv[17], NULL);
-    float maxVX = strtof(argv[17], NULL);
+    float maxVX = strtof(argv[18], NULL);
     float minVY = strtof(argv[19], NULL);
     float maxVY = strtof(argv[20], NULL);
 

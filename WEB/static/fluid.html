@@ -6,7 +6,7 @@
     <title>Physics Programs</title>
     <link rel="stylesheet" href="CSS/index.css">
     <link rel="stylesheet" href="CSS/inputs.css">
-    <script src="JS/fluid.js"></script>
+    <link rel="stylesheet" href="CSS/slider.css">
 </head>
 
 <body>
@@ -29,92 +29,167 @@
 
     <form id="fluidArgs" action="/submit" method="POST">
         <button type="submit">Run Program</button>
+
         <div class="input-group-size">
-            <label for="size">X:</label>
-            <input type="number" value="128" name="x" id="x" required>
-        </div>
-        <div class="input-group-size">
-            <label for="size">Y:</label>
-            <input type="number" value="128" name="y" id="y" required>
-        </div>
-        <div class="input-group-size">
-            <label for="size">Frames:</label>
-            <input type="number" value="300" name="frames" id="frames" required>
-        </div>
-        <div class="input-group-size">
-            <label for="size">Physics Frames Per Graphic Frame:</label>
-            <input type="number" value="1" name="physicsPerGraphic" id="physicsPerGraphic" required>
-        </div>
-        <div class="input-group-size">
-            <label for="size">Time Step (dt)</label>
-            <input type="number" value="0.005" step="0.00000001" name="dt" id="dt" required>
-        </div>
-        <div class="input-group-size">
-            <label for="size">Effect Radius</label>
-            <input type="number" value="8" name="effectRadius" id="effectRadius" required>
+            <label for="size">X (10 to 150) (Size of the video to generate in pixels)</label>
+            <div class="slidecontainer">
+                <input type="range" min="10" max="150" value="100" class="slider" id="x" name="x" required>
+                <p class="sliderValue"> : <input class="typeInput" type="number" min="" max="" id="xout"></input></p>
+            </div>
         </div>
 
         <div class="input-group-size">
-            <label for="size">Gravity: x</label>
-            <input type="number" value="0" name="gravx" id="gravx" required>
-        </div>
-        <div class="input-group-size">
-            <label for="size">Gravity: y</label>
-            <input type="number" value="0" name="gravy" id="gravy" required>
-        </div>
-
-        <div class="input-group-size">
-            <label for="size">Number of Particles</label>
-            <input type="number" value="2000" name="numParticles" id="numParticles" required>
+            <label for="size">Y (10 to 150) (Size of the video to generate in pixels)</label>
+            <div class="slidecontainer">
+                <input type="range" min="10" max="150" value="100" class="slider" id="y" name="y" required>
+                <p class="sliderValue"> : <input class="typeInput" type="number" id="yout"></input></p>
+            </div>
         </div>
 
         <div class="input-group-size">
-            <label for="size">Minimum Mass</label>
-            <input type="number" value="1" name="minMass" id="minMass" required>
-        </div>
-        <div class="input-group-size">
-            <label for="size">Maximum Mass</label>
-            <input type="number" value="1" name="maxMass" id="maxMass" required>
-        </div>
-
-        <div class="input-group-size">
-            <label for="size">Minimum X</label>
-            <input type="number" value="20" name="minX" id="minX" required>
-        </div>
-        <div class="input-group-size">
-            <label for="size">Maximum X</label>
-            <input type="number" value="100" name="maxX" id="maxX" required>
+            <label for="size">Frames (50 to 500) video runs at 50fps:</label>
+            <div class="slidecontainer">
+                <input type="range" min="50" max="500" value="150" class="slider" id="frames" name="frames" required>
+                <p class="sliderValue"> : <input class="typeInput" type="number" id="framesOut"></input></p>
+            </div>
         </div>
 
         <div class="input-group-size">
-            <label for="size">Minimum Y</label>
-            <input type="number" value="20" name="minY" id="minY" required>
+            <label for="size">Physics Frames Per Graphic Frame (number of computational frames per visual frame) (1 to 10):</label>
+            <div class="slidecontainer">
+                <input type="range" min="1" max="10" value="1" class="slider" id="physicsPerGraphic" name="physicsPerGraphic" required>
+                <p class="sliderValue"> : <input class="typeInput" type="number" id="physicsPerGraphicOut"></input></p>
+            </div>
         </div>
+        
         <div class="input-group-size">
-            <label for="size">Maximum Y</label>
-            <input type="number" value="100" name="maxY" id="maxY" required>
+            <label for="size">Time Step (dt) (amount of time between each frame) (0.0001 to 0.1)</label>
+            <div class="slidecontainer">
+                <input type="range" min="0.0001" max="0.1" step="0.0001" value="0.01" class="slider" id="dt" name="dt" required>
+                <p class="sliderValue"> : <input class="typeInput" type="number" id="dtOut"></input></p>
+            </div>
+        </div>
+        
+        <div class="input-group-size">
+            <label for="size">Effect Radius (how far away the particles can be before they stop interacting) (1 to min(X,Y))</label>
+            <div class="slidecontainer">
+                <input type="range" min="1" max="" value="8" class="slider" id="effectRadius" name="effectRadius" required>
+                <p class="sliderValue"> : <input class="typeInput" type="number" id="effectRadiusOut"></input></p>
+            </div>
         </div>
 
         <div class="input-group-size">
-            <label for="size">Minimum Velocity in X direction</label>
-            <input type="number" value="0" name="minVX" id="minVX" required>
-        </div>
-        <div class="input-group-size">
-            <label for="size">Maximum Velocity in X direction</label>
-            <input type="number" value="0" name="maxVX" id="maxVX" required>
+            <label for="size">Gravity: x (force of gravity on the particles in the horizontal direction) (-1000 to 1000)</label>
+            <div class="slidecontainer">
+                <input type="range" min="-1000" max="1000" class="slider" value="0" name="gravx" id="gravx" required>
+                <p class="sliderValue"> : <input class="typeInput" type="number" id="gravxOut"></input></p>
+            </div>
         </div>
 
         <div class="input-group-size">
-            <label for="size">Minimum Velocity in Y direction</label>
-            <input type="number" value="0" name="minVY" id="minVY" required>
+            <label for="size">Gravity: y (force of gravity on the particles in the vertical direction) (-1000 to 1000)</label>
+            <div class="slidecontainer">
+                <input type="range" min="-1000" max="1000" class="slider" value="0" name="gravy" id="gravy" required>
+                <p class="sliderValue"> : <input class="typeInput" type="number" id="gravyOut"></input></p>
+            </div>
         </div>
+
         <div class="input-group-size">
-            <label for="size">Maximum Velocity in Y direction</label>
-            <input type="number" value="0" name="maxVY" id="maxVY" required>
+            <label for="size">Number of Particles (1 to 5000)</label>
+            <div class="slidecontainer">
+                <input type="range" min="1" max="5000" class="slider" value="1000" name="numParticles" id="numParticles" required>
+                <p class="sliderValue"> : <input class="typeInput" type="number" id="numParticlesOut"></input></p>
+            </div>
+        </div>
+
+        <div class="input-description">
+            <p>The following inputs specify a minimum and maximum value for the particles, each particle will have a random value between those associated with it</p>
+        </div>
+
+        <div class="input-group-size">
+            <label for="size">Minimum Mass (-10 to Maximum Mass)</label>
+            <div class="slidecontainer">
+                <input type="range" min="-10" max="10" class="slider" value="1" name="minMass" id="minMass" required>
+                <p class="sliderValue"> : <input class="typeInput" type="number" id="minMassOut"></input></p>
+            </div>
+        </div>
+
+        <div class="input-group-size">
+            <label for="size">Maximum Mass (Minimum Mass to 10)</label>
+            <div class="slidecontainer">
+                <input type="range" min="-10" max="10" class="slider" value="1" name="maxMass" id="maxMass" required>
+                <p class="sliderValue"> : <input class="typeInput" type="number" id="maxMassOut"></input></p>
+            </div>
+        </div>
+
+        <div class="input-group-size">
+            <label for="size">Minimum X position (3 to Maximum x position)</label>
+            <div class="slidecontainer">
+                <input type="range" min="3" max="97" class="slider" value="3" name="minX" id="minX" required>
+                <p class="sliderValue"> : <input class="typeInput" type="number" id="minXOut"></input></p>
+            </div>
+        </div>
+
+        <div class="input-group-size">
+            <label for="size">Maximum X position (Minimum x position to image size x - 3)</label>
+            <div class="slidecontainer">
+                <input type="range" min="3" max="97" class="slider" value="97" name="maxX" id="maxX" required>
+                <p class="sliderValue"> : <input class="typeInput" type="number" id="maxXOut"></input></p>
+            </div>
+        </div>
+
+        <div class="input-group-size">
+            <label for="size">Minimum Y position (3 to Maximum y position)</label>
+            <div class="slidecontainer">
+                <input type="range" min="3" max="97" class="slider" value="3" name="minY" id="minY" required>
+                <p class="sliderValue"> : <input class="typeInput" type="number" id="minYOut"></input></p>
+            </div>
+        </div>
+
+        <div class="input-group-size">
+            <label for="size">Maximum Y position (Minimum y position to image size y - 3)</label>
+            <div class="slidecontainer">
+                <input type="range" min="3" max="97" class="slider" value="97" name="maxY" id="maxY" required>
+                <p class="sliderValue"> : <input class="typeInput" type="number" id="maxYOut"></input></p>
+            </div>
+        </div>
+
+        <div class="input-group-size">
+            <label for="size">Minimum Velocity in X direction (-50 to Max velocity in X direction)</label>
+            <div class="slidecontainer">
+                <input type="range" min="-50" max="50" class="slider" value="0" name="minVX" id="minVX" required>
+                <p class="sliderValue"> : <input class="typeInput" type="number" id="minVXOut"></input></p>
+            </div>
+        </div>
+
+        <div class="input-group-size">
+            <label for="size">Maximum Velocity in X direction (Min velocity in X direction to 50)</label>
+            <div class="slidecontainer">
+                <input type="range" min="-50" max="50" class="slider" value="0" name="maxVX" id="maxVX" required>
+                <p class="sliderValue"> : <input class="typeInput" type="number" id="maxVXOut"></input></p>
+            </div>
+        </div>
+
+        <div class="input-group-size">
+            <label for="size">Minimum Velocity in Y direction (-50 to Max velocity in Y direction)</label>
+            <div class="slidecontainer">
+                <input type="range" min="-50" max="50" class="slider" value="0" name="minVY" id="minVY" required>
+                <p class="sliderValue"> : <input class="typeInput" type="number" id="minVYOut"></input></p>
+            </div>
+        </div>
+
+        <div class="input-group-size">
+            <label for="size">Maximum Velocity in Y direction (Min velocity in Y direction to 50)</label>
+            <div class="slidecontainer">
+                <input type="range" min="-50" max="50" class="slider" value="0" name="maxVY" id="maxVY" required>
+                <p class="sliderValue"> : <input class="typeInput" type="number" id="maxVYOut"></input></p>
+            </div>
         </div>  
     </form>
 
     <div class="space"></div>
+    
+    <script src="JS/fluid.js"></script>
 
 </body>
 
