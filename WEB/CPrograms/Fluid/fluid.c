@@ -14,8 +14,8 @@ void addDensities(float **densities, Particle *particle, float *sqrtLookupTable,
 
     // float dist = sqrt_fast(inner, sqrtLookupTable[(int)inner-1], sqrtLookupTable[(int)inner+1]);
     // float dist = sqrtLookupTable[(int)inner];
-    if (inner < 4.0f) {
-        inner = 4.0f;
+    if (inner < 2.0f) {
+        inner = 2.0f;
     }
 
     // densities[i][j] += particle->mass * (1/powf(dist/effectRadius, 2));
@@ -101,7 +101,7 @@ void writeppm(const char *path, char *truePath, uint8_t ***arr, int x, int y, in
     fclose(f);
 }
 
-void runStep(clock_t *timers, const char *path, char *truePath, float *sqrtLookupTable, Box ***boxes, int xboxes, int yboxes, uint8_t ***arr, float **densities, int x, int y, int numparticles, Particle **particles, float effectRadius, float effectSquared, int frames, float dt, int phyPerGra, float gravx, float gravy, int iter, int pressureView, int particleView, float pressureConstant, float viscosity) {
+void runStep(clock_t *timers, const char *path, char *truePath, float *sqrtLookupTable, Box ***boxes, int xboxes, int yboxes, uint8_t ***arr, float **densities, int x, int y, int numparticles, Particle **particles, float effectRadius, float effectSquared, int frames, float dt, int phyPerGra, float gravx, float gravy, int iter, int pressureView, int particleView, float pressureConstant, float viscosity, int colorMode) {
     float boundry = 3.0f; // must be > 0
     int tempX, tempY;
     int bx, by, dx, dy, neighborX, neighborY;
@@ -258,31 +258,32 @@ void runStep(clock_t *timers, const char *path, char *truePath, float *sqrtLooku
                 int minVal = 0;
                 int invert = 1;
 
-                // averageDensity = maxDensity/2;
-
-                // arr[i][j][0] = (int)(255 * densities[i][j] / maxDensity);
-                // arr[i][j][1] = 0;
-                // arr[i][j][2] = 0;
-
-                if (densities[i][j] > averageDensity*(1.0f + sepratation)) {
-                    arr[i][j][0] = (int)(255 * (densities[i][j]-averageDensity+minVal) / (maxDensity-averageDensity+minVal));
+                if (colorMode == 1) {
+                    float color = 255 * densities[i][j]/maxDensity;
+                    arr[i][j][0] = (int)(color);
                     arr[i][j][1] = 0;
-                    arr[i][j][2] = 0;
-                }
-                else if (densities[i][j] <= averageDensity*(1.0f - sepratation)) {
-                    arr[i][j][0] = 0;
-                    arr[i][j][1] = 0;
-                    if (invert == 0) {
-                        if (densities[i][j] == 0) arr[i][j][2] = 0;
-                        else arr[i][j][2] = (int)(255 * (averageDensity-densities[i][j]+minVal) / (averageDensity+minVal));
-                    } else {
-                        arr[i][j][2] = (int)(255 * (densities[i][j]+minVal) / (averageDensity+minVal));
+                    arr[i][j][2] = (int)(255 - color);
+                } else {
+                    if (densities[i][j] > averageDensity*(1.0f + sepratation)) {
+                        arr[i][j][0] = (int)(255 * (densities[i][j]-averageDensity+minVal) / (maxDensity-averageDensity+minVal));
+                        arr[i][j][1] = 0;
+                        arr[i][j][2] = 0;
                     }
-                }
-                else {
-                    arr[i][j][0] = (int)(255 * (densities[i][j]/maxDensity));
-                    arr[i][j][1] = (int)(255 * (densities[i][j]/maxDensity));
-                    arr[i][j][2] = (int)(255 * (densities[i][j]/maxDensity));
+                    else if (densities[i][j] <= averageDensity*(1.0f - sepratation)) {
+                        arr[i][j][0] = 0;
+                        arr[i][j][1] = 0;
+                        if (invert == 0) {
+                            if (densities[i][j] == 0) arr[i][j][2] = 0;
+                            else arr[i][j][2] = (int)(255 * (averageDensity-densities[i][j]+minVal) / (averageDensity+minVal));
+                        } else {
+                            arr[i][j][2] = (int)(255 * (densities[i][j]+minVal) / (averageDensity+minVal));
+                        }
+                    }
+                    else {
+                        arr[i][j][0] = (int)(255 * (densities[i][j]/maxDensity));
+                        arr[i][j][1] = (int)(255 * (densities[i][j]/maxDensity));
+                        arr[i][j][2] = (int)(255 * (densities[i][j]/maxDensity));
+                    }
                 }
             }
         }
@@ -350,17 +351,17 @@ void runStep(clock_t *timers, const char *path, char *truePath, float *sqrtLooku
     timers[3] += clock() - beginSim;
 }
 
-void runSimulation(clock_t *timers, const char *path, char *truePath, float *sqrtLookupTable, Box ***boxes, int xboxes, int yboxes, uint8_t ***arr, float **densities, int x, int y, int numparticles, Particle **particles, float effectRadius, int frames, float dt, int phyPerGra, float gravx, float gravy, int particleView, int pressureView, float pressureConstant, float viscosity) {
+void runSimulation(clock_t *timers, const char *path, char *truePath, float *sqrtLookupTable, Box ***boxes, int xboxes, int yboxes, uint8_t ***arr, float **densities, int x, int y, int numparticles, Particle **particles, float effectRadius, int frames, float dt, int phyPerGra, float gravx, float gravy, int particleView, int pressureView, float pressureConstant, float viscosity, int colorMode) {
     float effectSquared = effectRadius*effectRadius;
     
     clock_t beginTraj = clock();
-    runStep(timers, path, truePath, sqrtLookupTable, boxes, xboxes, yboxes, arr, densities, x, y, numparticles, particles, effectRadius, effectSquared, frames, dt, phyPerGra, gravx, gravy, 0, pressureView, particleView, pressureConstant, viscosity);
+    runStep(timers, path, truePath, sqrtLookupTable, boxes, xboxes, yboxes, arr, densities, x, y, numparticles, particles, effectRadius, effectSquared, frames, dt, phyPerGra, gravx, gravy, 0, pressureView, particleView, pressureConstant, viscosity, colorMode);
     clock_t endTraj = clock();
     printf("1 frame took: %f seconds\n", (double)(endTraj - beginTraj) / CLOCKS_PER_SEC);
     printf("program expected to take: %f seconds\n", (double)(endTraj - beginTraj) * frames / CLOCKS_PER_SEC);
     fflush(stdout);
     for (int i = 1; i < frames; i++) {
-        runStep(timers, path, truePath, sqrtLookupTable, boxes, xboxes, yboxes, arr, densities, x, y, numparticles, particles, effectRadius, effectSquared, frames, dt, phyPerGra, gravx, gravy, i, pressureView, particleView, pressureConstant, viscosity);
+        runStep(timers, path, truePath, sqrtLookupTable, boxes, xboxes, yboxes, arr, densities, x, y, numparticles, particles, effectRadius, effectSquared, frames, dt, phyPerGra, gravx, gravy, i, pressureView, particleView, pressureConstant, viscosity, colorMode);
     }
 }
 
@@ -394,6 +395,8 @@ int main(int argc, char** argv) {
 
     float pressureConstant = strtof(argv[23], NULL);
     float viscosity = strtof(argv[24], NULL);
+
+    int colorMode = strtol(argv[25], NULL, 10);
 
     // int x = 100;
     // int y = 100;
@@ -499,7 +502,7 @@ int main(int argc, char** argv) {
     timers[3] = 0;
     printf("creating particles\n");
     clock_t beginSim = clock();
-    runSimulation(timers, path, truePath, sqrtLookupTable, boxes, xboxes, yboxes, arr, densities, x, y, numParticle, particles, effectRadius, frames, dt, phyPerGra, gravx, gravy, pressureView, particleView, pressureConstant, viscosity);
+    runSimulation(timers, path, truePath, sqrtLookupTable, boxes, xboxes, yboxes, arr, densities, x, y, numParticle, particles, effectRadius, frames, dt, phyPerGra, gravx, gravy, pressureView, particleView, pressureConstant, viscosity, colorMode);
     clock_t endSim = clock();
     printf("simulating %d particles at %d computational frames took: %f seconds\n", numParticle, frames * phyPerGra, (double)(endSim - beginSim) / CLOCKS_PER_SEC);
 

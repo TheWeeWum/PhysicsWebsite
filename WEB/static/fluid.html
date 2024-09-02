@@ -44,6 +44,15 @@
                 <p class="sliderValue"> : <input class="typeInput" type="number" min="" max="" id="particleViewOut"></input></p>
             </div>
         </div>
+        <div class="input-group-size">
+            <label for="size">Pressure Display Type <br>0: displays red highlight for points above the average pressure and blue highlight for points below the average pressure. Displays black if there are no particles nearby as well as for the average pressure
+            <br>1: displays a gradient of red to blue based on an aboslute pressure scale. <br>
+            Red at max pressure and blue at 0 pressure.</label>
+            <div class="slidecontainer">
+                <input type="range" min="0" max="1" value="0" class="slider" id="colorMode" name="colorMode" required>
+                <p class="sliderValue"> : <input class="typeInput" type="number" min="" max="" id="colorModeOut"></input></p>
+            </div>
+        </div>
 
         <div class="input-group-size">
             <label for="size">Pressure Constant (scales the force associated with particle proximity) (0.01 to 10)</label>

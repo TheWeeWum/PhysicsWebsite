@@ -64,6 +64,8 @@ particleView = int(data['particleView'])
 pressureConstant = float(data['pressureConstant'])
 viscosity = float(data['viscosity'])
 
+colorMode = int(data['colorMode'])
+
 # num_particles = 4500
 # min_mass = 1
 # max_mass = 1
@@ -92,7 +94,8 @@ call_args.extend([f"{num_particles}",
                   f"{min_vx}", f"{max_vx}",
                   f"{min_vy}", f"{max_vy}",
                   f"{pressureView}", f"{particleView}",
-                  f"{pressureConstant}", f"{viscosity}"])
+                  f"{pressureConstant}", f"{viscosity}",
+                  f"{colorMode}"])
 
 print(call_args)
 time_before_program = time_ns()

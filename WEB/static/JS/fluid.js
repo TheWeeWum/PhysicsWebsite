@@ -60,9 +60,12 @@ var outputPressureConstant = document.getElementById("pressureConstantOut");
 var sliderViscosity = document.getElementById("viscosity");
 var outputViscosity = document.getElementById("viscosityOut");
 
+var sliderColorMode = document.getElementById("colorMode");
+var outputColorMode = document.getElementById("colorModeOut");
 
-var sliders = [sliderX, sliderY, sliderFrames, sliderPhysicsFrames, sliderDT, sliderEffectRadius, sliderGravx, sliderGravy, sliderNumParticles, sliderMinMass, sliderMaxMass, sliderMinX, sliderMaxX, sliderMinY, sliderMaxY, sliderMinVX, sliderMaxVX, sliderMinVY, sliderMaxVY, sliderViewParticles, sliderViewPressure, sliderPressureConstant, sliderViscosity];
-var outputs = [outputX, outputY, outputFrames, outputPhysicsFrames, outputDT, outputEffectRadius, outputGravx, outputGravy, outputNumParticles, outputMinMass, outputMaxMass, outputMinX, outputMaxX, outputMinY, outputMaxY, outputMinVX, outputMaxVX, outputMinVY, outputMaxVY, outputViewParticles, outputViewPressure, outputPressureConstant, outputViscosity];
+
+var sliders = [sliderX, sliderY, sliderFrames, sliderPhysicsFrames, sliderDT, sliderEffectRadius, sliderGravx, sliderGravy, sliderNumParticles, sliderMinMass, sliderMaxMass, sliderMinX, sliderMaxX, sliderMinY, sliderMaxY, sliderMinVX, sliderMaxVX, sliderMinVY, sliderMaxVY, sliderViewParticles, sliderViewPressure, sliderPressureConstant, sliderViscosity, sliderColorMode];
+var outputs = [outputX, outputY, outputFrames, outputPhysicsFrames, outputDT, outputEffectRadius, outputGravx, outputGravy, outputNumParticles, outputMinMass, outputMaxMass, outputMinX, outputMaxX, outputMinY, outputMaxY, outputMinVX, outputMaxVX, outputMinVY, outputMaxVY, outputViewParticles, outputViewPressure, outputPressureConstant, outputViscosity, outputColorMode];
 
 for (var i = 0; i < sliders.length; i++) {
   outputs[i].value = sliders[i].value;
@@ -104,25 +107,32 @@ sliderX.oninput = function() {
   setUpperLimit(sliderEffectRadius, outputEffectRadius, outputX.value, outputY.value);
   sliderMinX.setAttribute("max", parseInt(outputX.value) - 3);
   sliderMaxX.setAttribute("max", parseInt(outputX.value) - 3);
+  outputMinX.setAttribute("max", parseInt(outputX.value) - 3);
+  outputMaxX.setAttribute("max", parseInt(outputX.value) - 3);
 }
-
 outputX.oninput = function() {
   sliderX.value = outputX.value;
   setUpperLimit(sliderEffectRadius, outputEffectRadius, outputX.value, outputY.value);
   sliderMinX.setAttribute("max", parseInt(outputX.value) - 3);
   sliderMaxX.setAttribute("max", parseInt(outputX.value) - 3);
+  outputMinX.setAttribute("max", parseInt(outputX.value) - 3);
+  outputMaxX.setAttribute("max", parseInt(outputX.value) - 3);
 }
 sliderY.oninput = function() {
   outputY.value = sliderY.value;
   setUpperLimit(sliderEffectRadius, outputEffectRadius, outputX.value, outputY.value);
   sliderMinY.setAttribute("max", parseInt(outputY.value) - 3);
   sliderMaxY.setAttribute("max", parseInt(outputY.value) - 3);
+  outputMinY.setAttribute("max", parseInt(outputY.value) - 3);
+  outputMaxY.setAttribute("max", parseInt(outputY.value) - 3);
 }
 outputY.oninput = function() {
   sliderY.value = outputY.value;
   setUpperLimit(sliderEffectRadius, outputEffectRadius, outputX.value, outputY.value);
   sliderMinY.setAttribute("max", parseInt(outputY.value) - 3);
   sliderMaxY.setAttribute("max", parseInt(outputY.value) - 3);
+  outputMinY.setAttribute("max", parseInt(outputY.value) - 3);
+  outputMaxY.setAttribute("max", parseInt(outputY.value) - 3);
 }
 
 function moveSmaller(max, minSlider, minOutput) {
